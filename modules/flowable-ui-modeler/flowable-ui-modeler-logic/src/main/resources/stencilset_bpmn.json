@@ -1,5 +1,5 @@
 {
-  "title" : "Process editor",
+  "title" : "计划编辑器",
   "namespace" : "http://b3mn.org/stencilset/bpmn2.0#",
   "description" : "BPMN process editor",
   "propertyPackages" : [ {
@@ -7,7 +7,7 @@
     "properties" : [ {
       "id" : "process_id",
       "type" : "String",
-      "title" : "Process identifier",
+      "title" : "计划类别标识符",
       "value" : "process",
       "description" : "Unique identifier of the process definition.",
       "popular" : true
@@ -27,7 +27,7 @@
     "properties" : [ {
       "id" : "name",
       "type" : "String",
-      "title" : "Name",
+      "title" : "名字",
       "value" : "",
       "description" : "The descriptive name of the BPMN element.",
       "popular" : true,
@@ -38,7 +38,7 @@
     "properties" : [ {
       "id" : "documentation",
       "type" : "Text",
-      "title" : "Documentation",
+      "title" : "描述",
       "value" : "",
       "description" : "The descriptive name of the BPMN element.",
       "popular" : true
@@ -48,7 +48,7 @@
     "properties" : [ {
       "id" : "categorydefinition",
       "type" : "String",
-      "title" : "Category",
+      "title" : "类别",
       "value" : "",
       "description" : "Category of the BPMN element.",
       "popular" : true
