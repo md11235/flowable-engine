@@ -208,7 +208,7 @@
     "properties" : [ {
       "id" : "formproperties",
       "type" : "Complex",
-      "title" : "Form properties",
+      "title" : "表单属性",
       "value" : "",
       "description" : "Definition of the form with a list of form properties",
       "popular" : true
@@ -218,7 +218,7 @@
     "properties" : [ {
       "id" : "formkeydefinition",
       "type" : "String",
-      "title" : "Form key",
+      "title" : "表单唯一标识符",
       "value" : "",
       "description" : "Form key that provides a reference to a form.",
       "popular" : true
@@ -228,7 +228,7 @@
     "properties" : [ {
       "id" : "duedatedefinition",
       "type" : "String",
-      "title" : "Due date",
+      "title" : "到期时间",
       "value" : "",
       "description" : "Due date of the user task.",
       "popular" : true
@@ -238,7 +238,7 @@
     "properties" : [ {
       "id" : "prioritydefinition",
       "type" : "String",
-      "title" : "Priority",
+      "title" : "优先级",
       "value" : "",
       "description" : "Priority of the user task.",
       "popular" : true
@@ -248,7 +248,7 @@
     "properties" : [ {
       "id" : "servicetaskclass",
       "type" : "String",
-      "title" : "Class",
+      "title" : "类名字",
       "value" : "",
       "description" : "Class that implements the service task logic.",
       "popular" : true
@@ -258,7 +258,7 @@
     "properties" : [ {
       "id" : "servicetaskexpression",
       "type" : "Text",
-      "title" : "Expression",
+      "title" : "任务表达式",
       "value" : "",
       "description" : "Service task logic defined with an expression.",
       "popular" : true
@@ -268,7 +268,7 @@
     "properties" : [ {
       "id" : "servicetaskdelegateexpression",
       "type" : "Text",
-      "title" : "Delegate expression",
+      "title" : "代理表达式",
       "value" : "",
       "description" : "Service task logic defined with a delegate expression.",
       "popular" : true
@@ -278,7 +278,7 @@
     "properties" : [ {
       "id" : "servicetaskfields",
       "type" : "Complex",
-      "title" : "Class fields",
+      "title" : "类字段", // Class fields
       "value" : "",
       "description" : "Field extensions",
       "popular" : true
@@ -288,7 +288,7 @@
     "properties" : [ {
       "id" : "servicetaskresultvariable",
       "type" : "String",
-      "title" : "Result variable name",
+      "title" : "结果变量名字",//Result variable name
       "value" : "",
       "description" : "Process variable name to store the service task result.",
       "popular" : true
@@ -298,7 +298,7 @@
     "properties" : [ {
       "id" : "servicetaskUseLocalScopeForResultVariable",
       "type" : "Boolean",
-      "title" : "Use local scope for result variable",
+      "title" : "结果变量使用局部作用于", //Use local scope for result variable
       "value" : "false",
       "description" : "Flag that marks that the used resultVariable needs to be saved as a local variable",
       "popular" : true
@@ -308,7 +308,7 @@
     "properties" : [ {
       "id" : "servicetasktriggerable",
       "type" : "Boolean",
-      "title" : "Set service task to be triggerable",
+      "title" : "是否为可触发的服务型任务", //Set service task to be triggerable
       "value" : "false",
       "description" : "Sets the service task to be triggerable",
       "popular" : true
@@ -318,7 +318,7 @@
     "properties" : [ {
           "id": "scriptformat",
           "type": "String",
-          "title": "Script format",
+          "title": "脚本任务的格式",//Script format
           "value": "",
           "description": "Script format of the script task.",
           "popular": true
@@ -328,7 +328,7 @@
     "properties" : [ {
           "id": "scripttext",
           "type": "Text",
-          "title": "Script",
+          "title": "脚本",//Script
           "value": "",
           "description": "Script text of the script task.",
           "popular": true
@@ -339,7 +339,7 @@
       "properties": [{
           "id": "scriptautostorevariables",
           "type": "Boolean",
-          "title": "Auto Store Variables",
+          "title": "自动保存变量",//Auto Store Variables
           "value": "false",
           "description": "Automatically store all script variables to the process.",
           "popular": true
@@ -349,7 +349,7 @@
     "properties" : [ {
       "id" : "shellcommand",
       "type" : "String",
-      "title" : "Command",
+      "title" : "命令",//Command
       "value" : "",
       "description" : "Shell task command",
       "popular" : true
@@ -359,7 +359,7 @@
     "properties" : [ {
       "id" : "shellarg1",
       "type" : "Text",
-      "title" : "Argument 1",
+      "title" : "参数1", //Argument 1
       "value" : "",
       "description" : "Shell commnad arg 1",
       "popular" : true
@@ -369,7 +369,7 @@
     "properties" : [ {
       "id" : "shellarg2",
       "type" : "Text",
-      "title" : "Argument 2",
+      "title" : "参数2",//Argument 2
       "value" : "",
       "description" : "Shell commnad arg 2",
       "popular" : true
@@ -379,7 +379,7 @@
     "properties" : [ {
       "id" : "shellarg3",
       "type" : "Text",
-      "title" : "Argument 3",
+      "title" : "参数3",//Argument 3
       "value" : "",
       "description" : "Shell commnad arg 3",
       "popular" : true
@@ -389,7 +389,7 @@
     "properties" : [ {
       "id" : "shellarg4",
       "type" : "Text",
-      "title" : "Argument 4",
+      "title" : "参数4",//Argument 4
       "value" : "",
       "description" : "Shell commnad arg 4",
       "popular" : true
@@ -399,7 +399,7 @@
     "properties" : [ {
       "id" : "shellarg5",
       "type" : "Text",
-      "title" : "Argument 5",
+      "title" : "参数5",
       "value" : "",
       "description" : "Shell commnad arg 5",
       "popular" : true
@@ -409,7 +409,7 @@
     "properties" : [ {
       "id" : "shellwait",
       "type" : "Text",
-      "title" : "Wait",
+      "title" : "等待", // Wait
       "value" : "",
       "description" : "Flag to wait for shell command execution end",
       "popular" : true
@@ -419,7 +419,7 @@
     "properties" : [ {
       "id" : "shelloutputvariable",
       "type" : "Text",
-      "title" : "Output variable",
+      "title" : "输出变量",//Output variable
       "value" : "",
       "description" : "Variable to store shell commnad output",
       "popular" : true
@@ -429,7 +429,7 @@
     "properties" : [ {
       "id" : "shellerrorcodevariable",
       "type" : "Text",
-      "title" : "Error code variable",
+      "title" : "错误代码变量",//Error code variable
       "value" : "",
       "description" : "Variable to store shell commnad error code",
       "popular" : true
@@ -439,7 +439,7 @@
     "properties" : [ {
       "id" : "shellredirecterror",
       "type" : "Text",
-      "title" : "Redirect error",
+      "title" : "重定向错误",//Redirect error
       "value" : "",
       "description" : "If true merge error output with standard output",
       "popular" : true
@@ -449,7 +449,7 @@
     "properties" : [ {
       "id" : "shellcleanenv",
       "type" : "Text",
-      "title" : "Clean env",
+        "title" : "清除环境设置", //Clean env",
       "value" : "",
       "description" : "Clean shell execution environment",
       "popular" : true
@@ -459,7 +459,7 @@
     "properties" : [ {
       "id" : "shelldirectory",
       "type" : "Text",
-      "title" : "Directory",
+        "title" : "目录", //Directory",
       "value" : "",
       "description" : "Shell process working directory",
       "popular" : true
@@ -469,7 +469,7 @@
     "properties" : [ {
       "id" : "ruletask_rules",
       "type" : "String",
-      "title" : "Rules",
+        "title" : "规则",//Rules",
       "value" : "",
       "description" : "Rules of the rule task.",
       "popular" : true
@@ -479,7 +479,7 @@
     "properties" : [ {
       "id" : "ruletask_variables_input",
       "type" : "String",
-      "title" : "Input variables",
+        "title" : "输入变量",//Input variables",
       "value" : "",
       "description" : "Input variables of the rule task.",
       "popular" : true
@@ -489,7 +489,7 @@
     "properties" : [ {
       "id" : "ruletask_exclude",
       "type" : "Boolean",
-      "title" : "Exclude",
+        "title" : "排除", //Exclude",
       "value" : "false",
       "description" : "Use the rules property as exclusion.",
       "popular" : true
@@ -499,7 +499,7 @@
     "properties" : [ {
       "id" : "ruletask_result",
       "type" : "String",
-      "title" : "Result variable",
+        "title" : "结果变量", //Result variable",
       "value" : "",
       "description" : "Result variable of the rule task.",
       "popular" : true
@@ -509,7 +509,7 @@
     "properties" : [ {
       "id" : "mailtaskheaders",
       "type" : "Text",
-      "title" : "Headers",
+        "title" : "邮件首部", //Headers",
       "value" : "",
       "description" : "Line separated Mail headers (For example - X-Attribute: value).",
       "popular" : true
@@ -519,7 +519,7 @@
     "properties" : [ {
       "id" : "mailtaskto",
       "type" : "Text",
-      "title" : "To",
+        "title" : "收件人", //To",
       "value" : "",
       "description" : "The recipients if the e-mail. Multiple recipients are defined in a comma-separated list.",
       "popular" : true
@@ -529,7 +529,7 @@
     "properties" : [ {
       "id" : "mailtaskfrom",
       "type" : "Text",
-      "title" : "From",
+        "title" : "发件人", //From",
       "value" : "",
       "description" : "The sender e-mail address. If not provided, the default configured from address is used.",
       "popular" : true
@@ -539,7 +539,7 @@
     "properties" : [ {
       "id" : "mailtasksubject",
       "type" : "Text",
-      "title" : "Subject",
+        "title" : "邮件主题", //Subject",
       "value" : "",
       "description" : "The subject of the e-mail.",
       "popular" : true
@@ -549,7 +549,7 @@
     "properties" : [ {
       "id" : "mailtaskcc",
       "type" : "Text",
-      "title" : "Cc",
+        "title" : "抄送", //Cc",
       "value" : "",
       "description" : "The cc's of the e-mail. Multiple recipients are defined in a comma-separated list",
       "popular" : true
@@ -559,7 +559,7 @@
     "properties" : [ {
       "id" : "mailtaskbcc",
       "type" : "Text",
-      "title" : "Bcc",
+        "title" : "密送", //Bcc",
       "value" : "",
       "description" : "The bcc's of the e-mail. Multiple recipients are defined in a comma-separated list",
       "popular" : true
@@ -569,7 +569,7 @@
     "properties" : [ {
       "id" : "mailtasktext",
       "type" : "Text",
-      "title" : "Text",
+        "title" : "邮件正文", //Text",
       "value" : "",
       "description" : "The content of the e-mail, in case one needs to send plain none-rich e-mails. Can be used in combination with html, for e-mail clients that don't support rich content. The client will then fall back to this text-only alternative.",
       "popular" : true
@@ -589,7 +589,7 @@
     "properties" : [ {
       "id" : "mailtaskcharset",
       "type" : "String",
-      "title" : "Charset",
+        "title" : "字符集", //Charset",
       "value" : "",
       "description" : "Allows to change the charset of the email, which is necessary for many non-English languages. ",
       "popular" : true
@@ -599,7 +599,7 @@
     "properties" : [ {
       "id" : "httptaskrequestmethod",
       "type" : "flowable-http-request-method",
-      "title" : "Request method",
+        "title" : "请求方法", //Request method",
       "value" : "",
       "description" : "Request method (For example - GET,POST,PUT etc).",
       "popular" : true
@@ -609,7 +609,7 @@
     "properties" : [ {
       "id" : "httptaskrequesturl",
       "type" : "Text",
-      "title" : "Request URL",
+        "title" : "请求地址", //Request URL",
       "value" : "",
       "description" : "Request URL (For example - http://flowable.org).",
       "popular" : true
@@ -619,7 +619,7 @@
     "properties" : [ {
       "id" : "httptaskrequestheaders",
       "type" : "Text",
-      "title" : "Request headers",
+        "title" : "请求首部", //Request headers",
       "value" : "",
       "description" : "Line separated HTTP request headers (For example - Content-Type: application/json).",
       "popular" : true
@@ -629,7 +629,7 @@
     "properties" : [ {
       "id" : "httptaskrequestbody",
       "type" : "Text",
-      "title" : "Request body",
+        "title" : "请求内容", //Request body",
       "value" : "",
       "description" : "Request body (For example- ${sampleBody}).",
       "popular" : true
@@ -639,7 +639,7 @@
     "properties" : [ {
       "id" : "httptaskrequestbodyencoding",
       "type" : "Text",
-      "title" : "Request body encoding",
+        "title" : "请求内容编码", //Request body encoding",
       "value" : "",
       "description" : "Request body encoding (For example- UTF-8).",
       "popular" : true
@@ -649,7 +649,7 @@
     "properties" : [ {
       "id" : "httptaskrequesttimeout",
       "type" : "String",
-      "title" : "Request timeout",
+        "title" : "请求超时", //Request timeout",
       "value" : "",
       "description" : "Timeout in milliseconds for the request (For example - 5000).",
       "popular" : true
@@ -659,7 +659,7 @@
     "properties" : [ {
       "id" : "httptaskdisallowredirects",
       "type" : "String",
-      "title" : "Disallow redirects",
+        "title" : "禁止重定向", //Disallow redirects",
       "value" : "",
       "description" : "Flag to disallow HTTP redirects.",
       "popular" : true
@@ -669,7 +669,7 @@
     "properties" : [ {
       "id" : "httptaskfailstatuscodes",
       "type" : "String",
-      "title" : "Fail status codes",
+        "title" : "失败状态码", //Fail status codes",
       "value" : "",
       "description" : "Comma separated list of HTTP response status codes to retry, for example 400,5XX.",
       "popular" : true
@@ -679,7 +679,7 @@
     "properties" : [ {
       "id" : "httptaskhandlestatuscodes",
       "type" : "String",
-      "title" : "Handle status codes",
+        "title" : "被忽略的状态码", //Handle status codes",
       "value" : "",
       "description" : "Comma separated list of HTTP response status codes to ignore, for example 404,3XX.",
       "popular" : true
@@ -689,7 +689,7 @@
     "properties" : [ {
       "id" : "httptaskignoreexception",
       "type" : "String",
-      "title" : "Ignore exception",
+        "title" : "忽略异常", //Ignore exception",
       "value" : "",
       "description" : "Flag to ignore exceptions.",
       "popular" : true
@@ -1288,7 +1288,7 @@
     "description" : "A start event without a specific trigger",
     "view" : "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n    <circle id=\"bg_frame\" cx=\"16\" cy=\"16\" r=\"15\" stroke=\"#585858\" fill=\"#ffffff\" stroke-width=\"1\"/>\n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n  </g>\n</svg>",
     "icon" : "startevent/none.png",
-    "groups" : [ "Start Events" ],
+    "groups" : [ "开始事件" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "executionlistenerspackage", "initiatorpackage", "formkeydefinitionpackage", "formreferencepackage", "formpropertiespackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "sequence_start", "Startevents_all", "StartEventsMorph", "all" ]
@@ -1299,7 +1299,7 @@
     "description" : "A start event with a timer trigger",
     "view" : "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n    <circle \n    \tid=\"bg_frame\" \n    \tcx=\"16\" \n    \tcy=\"16\" \n    \tr=\"15\" \n    \tstroke=\"#585858\" \n    \tfill=\"#ffffff\" \n    \tstroke-width=\"1\"\n    \tstyle=\"stroke-dasharray: 5.5, 3\" />\n    <circle id=\"frame\" cx=\"16\" cy=\"16\" r=\"15\" stroke=\"#585858\" fill=\"none\" stroke-width=\"1\"/>\n    \n    <path id=\"path1\" transform=\"translate(6,6)\"\n    \td=\"M 10 0 C 4.4771525 0 0 4.4771525 0 10 C 0 15.522847 4.4771525 20 10 20 C 15.522847 20 20 15.522847 20 10 C 20 4.4771525 15.522847 1.1842379e-15 10 0 z M 9.09375 1.03125 C 9.2292164 1.0174926 9.362825 1.0389311 9.5 1.03125 L 9.5 3.5 L 10.5 3.5 L 10.5 1.03125 C 15.063526 1.2867831 18.713217 4.9364738 18.96875 9.5 L 16.5 9.5 L 16.5 10.5 L 18.96875 10.5 C 18.713217 15.063526 15.063526 18.713217 10.5 18.96875 L 10.5 16.5 L 9.5 16.5 L 9.5 18.96875 C 4.9364738 18.713217 1.2867831 15.063526 1.03125 10.5 L 3.5 10.5 L 3.5 9.5 L 1.03125 9.5 C 1.279102 5.0736488 4.7225326 1.4751713 9.09375 1.03125 z M 9.5 5 L 9.5 8.0625 C 8.6373007 8.2844627 8 9.0680195 8 10 C 8 11.104569 8.8954305 12 10 12 C 10.931981 12 11.715537 11.362699 11.9375 10.5 L 14 10.5 L 14 9.5 L 11.9375 9.5 C 11.756642 8.7970599 11.20294 8.2433585 10.5 8.0625 L 10.5 5 L 9.5 5 z \"  \n    \tfill=\"#585858\" stroke=\"none\" />\n   \n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n  </g>\n</svg>",
     "icon" : "startevent/timer.png",
-    "groups" : [ "Start Events" ],
+    "groups" : [ "开始事件" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "executionlistenerspackage", "timercycledefinitionpackage", "timerdatedefinitionpackage", "timerdurationdefinitionpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "sequence_start", "Startevents_all", "StartEventsMorph", "all" ]
@@ -1310,7 +1310,7 @@
     "description" : "A start event with a signal trigger",
     "view" : "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n\n    <circle \n    \tid=\"bg_frame\" \n    \tcx=\"16\" \n    \tcy=\"16\" \n    \tr=\"15\" \n    \tstroke=\"#585858\" \n    \tfill=\"#ffffff\" \n    \tstroke-width=\"1\"\n    \tstyle=\"stroke-dasharray: 5.5, 3\" />\n    <circle id=\"frame\" cx=\"16\" cy=\"16\" r=\"15\" stroke=\"#585858\" fill=\"none\" stroke-width=\"1\"/>\n    <path\n       d=\"M 8.7124971,21.247342 L 23.333334,21.247342 L 16.022915,8.5759512 L 8.7124971,21.247342 z\"\n       id=\"triangle\"\n       stroke=\"#585858\"\n       style=\"fill:none;stroke-width:1.4;stroke-miterlimit:4;stroke-dasharray:none\" />\n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n  </g>\n</svg>",
     "icon" : "startevent/signal.png",
-    "groups" : [ "Start Events" ],
+    "groups" : [ "开始事件" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "executionlistenerspackage", "signalrefpackage", "interruptingpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "sequence_start", "Startevents_all", "StartEventsMorph", "all" ]
@@ -1321,7 +1321,7 @@
     "description" : "A start event with a message trigger",
     "view" : "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <g pointer-events=\"fill\">\n    <circle \n    \tid=\"bg_frame\" \n    \tcx=\"16\" \n    \tcy=\"16\" \n    \tr=\"15\" \n    \tstroke=\"#585858\" \n    \tfill=\"#ffffff\" \n    \tstroke-width=\"1\"\n    \tstyle=\"stroke-dasharray: 5.5, 3\" />\n    \n    <circle id=\"frame\" cx=\"16\" cy=\"16\" r=\"15\" stroke=\"#585858\" fill=\"none\" stroke-width=\"1\"/>\n    \n    <path transform=\"translate(7,7)\" id=\"path1\" stroke=\"none\" fill=\"#585858\" stroke-width=\"1\" d=\"m 0.5,2.5 0,13 17,0 0,-13 z M 2,4 6.5,8.5 2,13 z M 4,4 14,4 9,9 z m 12,0 0,9 -4.5,-4.5 z M 7.5,9.5 9,11 10.5,9.5 15,14 3,14 z\"/>\n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n  </g>\n</svg>",
     "icon" : "startevent/message.png",
-    "groups" : [ "Start Events" ],
+    "groups" : [ "开始事件" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "executionlistenerspackage", "messagerefpackage", "interruptingpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "sequence_start", "Startevents_all", "StartEventsMorph", "all" ]
@@ -1332,7 +1332,7 @@
     "description" : "A start event that catches a thrown BPMN error",
     "view" : "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n   xmlns=\"http://www.w3.org/2000/svg\"\n   xmlns:oryx=\"http://www.b3mn.org/oryx\"\n   width=\"40\"\n   height=\"40\"\n   version=\"1.0\">\n  <defs></defs>\n  <oryx:magnets>\n  \t<oryx:magnet oryx:cx=\"16\" oryx:cy=\"16\" oryx:default=\"yes\" />\n  </oryx:magnets>\n  <oryx:docker oryx:cx=\"16\" oryx:cy=\"16\" />\n  <g pointer-events=\"fill\">\n    <circle id=\"bg_frame\" cx=\"16\" cy=\"16\" r=\"15\" stroke=\"#585858\" fill=\"#ffffff\" stroke-width=\"1\"/>\n    \n    <path\n         stroke=\"#585858\"\n         style=\"fill:none;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10\"\n         d=\"M 22.820839,11.171502 L 19.36734,24.58992 L 13.54138,14.281819 L 9.3386512,20.071607 L 13.048949,6.8323057 L 18.996148,16.132659 L 22.820839,11.171502 z\"\n         id=\"errorPolygon\" />\n\t<text font-size=\"11\" \n\t\tid=\"text_name\" \n\t\tx=\"16\" y=\"33\" \n\t\toryx:align=\"top center\" \n\t\tstroke=\"#373e48\"\n\t></text>\n  </g>\n</svg>",
     "icon" : "startevent/error.png",
-    "groups" : [ "Start Events" ],
+    "groups" : [ "开始事件" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "executionlistenerspackage", "errorrefpackage", "interruptingpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "sequence_start", "Startevents_all", "StartEventsMorph", "all" ]
