@@ -7,7 +7,7 @@
     "properties" : [ {
       "id" : "process_id",
       "type" : "String",
-      "title" : "计划类别标识符",
+      "title" : "计划标识符",
       "value" : "process",
       "description" : "Unique identifier of the process definition.",
       "popular" : true
@@ -58,7 +58,7 @@
     "properties" : [ {
       "id" : "process_author",
       "type" : "String",
-      "title" : "Process author",
+      "title" : "计划制作人",
       "value" : "",
       "description" : "Author of the process definition.",
       "popular" : true
@@ -68,7 +68,7 @@
     "properties" : [ {
       "id" : "process_version",
       "type" : "String",
-      "title" : "Process version string (documentation only)",
+      "title" : "计划版本描述符（供文档用）",
       "value" : "",
       "description" : "Version identifier for documentation purpose.",
       "popular" : true
@@ -78,7 +78,7 @@
     "properties" : [ {
       "id" : "process_historylevel",
       "type" : "flowable-processhistorylevel",
-      "title" : "Set a specific history level for this process definition",
+      "title" : "设定此计划历史级别",
       "value" : "",
       "description" : "Set a specific history level for this process definition",
       "popular" : true
@@ -88,7 +88,7 @@
     "properties" : [ {
       "id" : "isexecutable",
       "type" : "Boolean",
-      "title" : "Is executable",
+      "title" : "是否可执行",
       "value" : "true",
       "description" : "Is the process executable?",
       "popular" : true
@@ -98,7 +98,7 @@
 	"properties" : [ {
 		"id" : "process_potentialstarteruser",
 		"type" : "String",
-		"title" : "Potential starter user",
+		"title" : "具有激活此流程的资格的用户",
 		"value" : "",
 		"description" : "Which user, can start the process?",
 		"popular" : true
@@ -108,7 +108,7 @@
 	"properties" : [ {
 		"id" : "process_potentialstartergroup",
 		"type" : "String",
-		"title" : "Potential starter group",
+		"title" : "具有激活此流程的用户组",
 		"value" : "",
 		"description" : "Which group, can start the process?",
 		"popular" : true
@@ -118,7 +118,7 @@
     "properties" : [ {
       "id" : "process_namespace",
       "type" : "String",
-      "title" : "Target namespace",
+      "title" : "目标命名空间",
       "value" : "http://www.flowable.org/processdef",
       "description" : "Target namespace for the process definition.",
       "popular" : true
