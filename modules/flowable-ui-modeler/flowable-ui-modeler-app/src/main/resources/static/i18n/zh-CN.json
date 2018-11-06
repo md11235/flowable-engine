@@ -2,7 +2,7 @@
     "GENERAL" : {
         "MAIN-TITLE": "Flowable编辑器",
         "NAVIGATION" : {
-            "PROCESSES": "流程",
+            "PROCESSES": "计划流程",
             "CASEMODELS": "Case模型",
             "FORMS": "表单",
             "DECISION-TABLES": "决策表",
@@ -802,7 +802,7 @@
     "PROPERTY.FIELDS.IMPLEMENTATION" : "实现",
 
     "PROPERTY.DATAPROPERTIES.VALUES" : "{{length}} data objects",
-    "PROPERTY.DATAPROPERTIES.EMPTY" : "没有配置data objects",
+    "PROPERTY.DATAPROPERTIES.EMPTY" : "没有配置数据对象",
     "PROPERTY.DATAPROPERTIES.ID" : "Id",
     "PROPERTY.DATAPROPERTIES.ID.PLACEHOLDER" : "输入一个id",
     "PROPERTY.DATAPROPERTIES.NAME" : "名称",
