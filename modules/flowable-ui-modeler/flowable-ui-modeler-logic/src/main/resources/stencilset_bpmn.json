@@ -1160,7 +1160,7 @@
     "properties" : [ {
       "id" : "messagedefinitions",
       "type" : "multiplecomplex",
-      "title" : "Message definitions",
+      "title" : "消息定义",
       "value" : "",
       "description" : "Message definitions",
       "popular" : true
