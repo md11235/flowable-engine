@@ -144,7 +144,7 @@ public class InjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInject
 
         ExecutionEntity execution = executionEntityManager.createChildExecution(subProcessExecutionEntity);
         
-        UserTask userTask = (UserTask) bpmnModel.getProcessById(processDefinitionEntity.getKey()).getFlowElement(dynamicUserTaskBuilder.getDynamicTaskId());
+        UserTask userTask = (UserTask) bpmnModel.getProcessById(processDefinitionEntity.getKey()).getFlowElement(dynamicUserTaskBuilder.getDynamicTaskId(), true);
         execution.setCurrentFlowElement(userTask);
 
         Context.getAgenda().planContinueProcessOperation(execution);
