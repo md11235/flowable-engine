@@ -18,6 +18,7 @@ import org.flowable.common.engine.api.FlowableException;
 import org.flowable.common.engine.impl.interceptor.Command;
 import org.flowable.common.engine.impl.interceptor.CommandContext;
 import org.flowable.engine.impl.context.Context;
+import org.flowable.engine.impl.dynamic.BaseDynamicSubProcessInjectUtil;
 import org.flowable.engine.impl.dynamic.DynamicUserTaskBuilder;
 import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.util.CommandContextUtil;
@@ -126,6 +127,8 @@ public class InjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInject
         //       调用 func1 插入 userTask
         //
         addUserTaskToSubProcess(process);
+
+        BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, process, bpmnModel, originalProcessDefinitionEntity, newDeploymentEntity);
     }
 
     @Override
