@@ -68,6 +68,13 @@ public class MybatisActivityInstanceDataManager extends AbstractProcessDataManag
     }
 
     @Override
+    public List<ActivityInstanceEntity> findActivityInstancesByActivityId(final String activityId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("activityId", activityId);
+        return getList("selectActivityInstanceByActivityId", params, activityInstanceMatcher, true);
+    }
+
+    @Override
     public void deleteActivityInstancesByProcessInstanceId(String processInstanceId) {
         DbSqlSession dbSqlSession = getDbSqlSession();
         deleteCachedEntities(dbSqlSession, activitiesByProcessInstanceIdMatcher, processInstanceId);

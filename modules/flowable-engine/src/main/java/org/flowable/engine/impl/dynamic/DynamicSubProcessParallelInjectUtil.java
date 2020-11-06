@@ -54,6 +54,9 @@ public class DynamicSubProcessParallelInjectUtil extends BaseDynamicSubProcessIn
                 initialStartEvent = startEvent;
             }
         }
+
+        // 获取SubProcess内部的initialStartEvent，
+        //initialStartEvent.getParentContainer()
         
         GraphicInfo elementGraphicInfo = bpmnModel.getGraphicInfo(initialStartEvent.getId());
         

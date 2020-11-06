@@ -36,6 +36,10 @@ public interface DynamicBpmnService {
 
     void injectParallelEmbeddedSubProcess(String taskId, DynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder);
 
+    void injectUserTaskInSubProcessInstance(String processInstanceId,
+                                            String subProcessActivityId,
+                                            DynamicUserTaskBuilder dynamicUserTaskBuilder);
+
     ObjectNode getProcessDefinitionInfo(String processDefinitionId);
 
     void saveProcessDefinitionInfo(String processDefinitionId, ObjectNode infoNode);

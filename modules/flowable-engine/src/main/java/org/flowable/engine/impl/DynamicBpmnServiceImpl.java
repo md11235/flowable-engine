@@ -22,13 +22,7 @@ import org.flowable.engine.DynamicBpmnConstants;
 import org.flowable.engine.DynamicBpmnService;
 import org.flowable.engine.dynamic.DynamicProcessDefinitionSummary;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
-import org.flowable.engine.impl.cmd.GetBpmnModelCmd;
-import org.flowable.engine.impl.cmd.GetProcessDefinitionInfoCmd;
-import org.flowable.engine.impl.cmd.InjectEmbeddedSubProcessInProcessInstanceCmd;
-import org.flowable.engine.impl.cmd.InjectParallelEmbeddedSubProcessCmd;
-import org.flowable.engine.impl.cmd.InjectParallelUserTaskCmd;
-import org.flowable.engine.impl.cmd.InjectUserTaskInProcessInstanceCmd;
-import org.flowable.engine.impl.cmd.SaveProcessDefinitionInfoCmd;
+import org.flowable.engine.impl.cmd.*;
 import org.flowable.engine.impl.dynamic.DynamicEmbeddedSubProcessBuilder;
 import org.flowable.engine.impl.dynamic.DynamicUserTaskBuilder;
 
@@ -64,6 +58,15 @@ public class DynamicBpmnServiceImpl extends CommonEngineServiceImpl<ProcessEngin
     @Override
     public void injectParallelEmbeddedSubProcess(String taskId, DynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder) {
         commandExecutor.execute(new InjectParallelEmbeddedSubProcessCmd(taskId, dynamicEmbeddedSubProcessBuilder));
+    }
+
+    @Override
+    public void injectUserTaskInSubProcessInstance(String processInstanceId, String subProcessActivityId, DynamicUserTaskBuilder dynamicUserTaskBuilder) {
+        commandExecutor.execute(new InjectUserTaskInSubProcessInstanceCmd(
+                processInstanceId,
+                subProcessActivityId,
+                dynamicUserTaskBuilder
+        ));
     }
 
     @Override

@@ -102,4 +102,6 @@ public interface ActivityInstanceEntityManager extends EntityManager<ActivityIns
      * @param execution execution which executed sequence flow
      */
     void recordSequenceFlowTaken(ExecutionEntity execution);
+
+    List<ActivityInstanceEntity> findActivityInstancesByActivityId(String subProcessActivityId);
 }

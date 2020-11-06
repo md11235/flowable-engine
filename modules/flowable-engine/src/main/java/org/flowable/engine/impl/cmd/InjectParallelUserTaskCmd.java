@@ -98,7 +98,9 @@ public class InjectParallelUserTaskCmd extends AbstractDynamicInjectionCmd imple
         parentContainer.removeFlowElement(userTask.getId());
         bpmnModel.removeGraphicInfo(userTask.getId());
         subProcess.addFlowElement(userTask);
-        
+
+        // parentContainer 可能是一个SubProcess，那么就实现了
+        // SubProcess内嵌套SubProcess。
         parentContainer.addFlowElement(subProcess);
         
         StartEvent startEvent = new StartEvent();

@@ -59,7 +59,12 @@ public class ActivityInstanceEntityManagerImpl extends AbstractEntityManager<Act
     protected List<ActivityInstanceEntity> findUnfinishedActivityInstancesByExecutionAndActivityId(String executionId, String activityId) {
         return activityInstanceDataManager.findUnfinishedActivityInstancesByExecutionAndActivityId(executionId, activityId);
     }
-    
+
+    @Override
+    public List<ActivityInstanceEntity> findActivityInstancesByActivityId(String subProcessActivityId) {
+        return activityInstanceDataManager.findActivityInstancesByActivityId(subProcessActivityId);
+    }
+
     @Override
     public List<ActivityInstanceEntity> findActivityInstancesByExecutionAndActivityId(String executionId, String activityId) {
         return activityInstanceDataManager.findActivityInstancesByExecutionIdAndActivityId(executionId, activityId);

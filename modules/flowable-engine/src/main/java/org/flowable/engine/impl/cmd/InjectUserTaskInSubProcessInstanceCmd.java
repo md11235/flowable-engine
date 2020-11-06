@@ -14,30 +14,32 @@ package org.flowable.engine.impl.cmd;
 
 import org.flowable.bpmn.model.Process;
 import org.flowable.bpmn.model.*;
+import org.flowable.common.engine.api.FlowableException;
 import org.flowable.common.engine.impl.interceptor.Command;
 import org.flowable.common.engine.impl.interceptor.CommandContext;
 import org.flowable.engine.impl.context.Context;
-import org.flowable.engine.impl.dynamic.BaseDynamicSubProcessInjectUtil;
 import org.flowable.engine.impl.dynamic.DynamicUserTaskBuilder;
-import org.flowable.engine.impl.persistence.entity.DeploymentEntity;
-import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
-import org.flowable.engine.impl.persistence.entity.ExecutionEntityManager;
-import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
+/*
+ author: sen.zhang@gmail.com
+ */
 public class InjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInjectionCmd implements Command<Void> {
 
+    private final String subProcessActivityId;
     protected String processInstanceId;
-    protected String subProcessDefinitionKey;
     protected DynamicUserTaskBuilder dynamicUserTaskBuilder;
 
-    public InjectUserTaskInSubProcessInstanceCmd(String processInstanceId, String subProcessDefinitionKey, DynamicUserTaskBuilder dynamicUserTaskBuilder) {
+    public InjectUserTaskInSubProcessInstanceCmd(String processInstanceId,
+                                                 String subProcessActivityId,
+                                                 DynamicUserTaskBuilder dynamicUserTaskBuilder) {
         this.processInstanceId = processInstanceId;
-        this.subProcessDefinitionKey = subProcessDefinitionKey;
+        this.subProcessActivityId = subProcessActivityId;
         this.dynamicUserTaskBuilder = dynamicUserTaskBuilder;
     }
 
@@ -47,121 +49,98 @@ public class InjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInject
         return null;
     }
 
+    private SubProcess findTargetSubProcess(Process process) {
+        List<SubProcess> subProcesses = process.findFlowElementsOfType(SubProcess.class, true);
+
+        SubProcess targetSubProcess = null;
+        for(SubProcess aSubProcess: subProcesses) {
+            if(aSubProcess.getId().equals(this.subProcessActivityId)) {
+                targetSubProcess = aSubProcess;
+                break;
+            }
+        }
+
+        if(targetSubProcess == null) {
+            throw new FlowableException("无法找到ID为\"" + subProcessActivityId + "\"的子流程。");
+        }
+
+        return targetSubProcess;
+    }
+
+    // func1
+    private void addUserTaskToSubProcess(
+            //CommandContext commandContext,
+            Process process //,
+            //BpmnModel bpmnModel
+            ) {
+        SubProcess targetSubProcess = findTargetSubProcess(process);
+
+        ParallelGateway fork = targetSubProcess.findFirstSubFlowElementInFlowMapOfType(ParallelGateway.class);
+
+        if(fork == null) {
+            throw new FlowableException("无法在ID为\"" + subProcessActivityId + "\"的子流程内找到开始分支。");
+        }
+
+        List<ParallelGateway> parGWs = targetSubProcess.findAllSubFlowElementInFlowMapOfType(ParallelGateway.class);
+        ParallelGateway join = parGWs.get(parGWs.size()-1);
+
+        UserTask newUserTask = new UserTask();
+        if (dynamicUserTaskBuilder.getId() != null) {
+            newUserTask.setId(dynamicUserTaskBuilder.getId());
+        } else {
+            newUserTask.setId(dynamicUserTaskBuilder.nextTaskId(process.getFlowElementMap()));
+        }
+        dynamicUserTaskBuilder.setDynamicTaskId(newUserTask.getId());
+        newUserTask.setName(dynamicUserTaskBuilder.getName());
+        newUserTask.setCandidateGroups(Arrays.asList(dynamicUserTaskBuilder.getAssignee().split(",")));
+        targetSubProcess.addFlowElement(newUserTask);
+
+        SequenceFlow forkFlow1 = new SequenceFlow(fork.getId(), newUserTask.getId());
+        forkFlow1.setId(dynamicUserTaskBuilder.nextFlowId(process.getFlowElementMap()));
+        targetSubProcess.addFlowElement(forkFlow1);
+
+        SequenceFlow joinFlow1 = new SequenceFlow(newUserTask.getId(), join.getId());
+        joinFlow1.setId(dynamicUserTaskBuilder.nextFlowId(process.getFlowElementMap()));
+        targetSubProcess.addFlowElement(joinFlow1);
+    }
+
     @Override
     protected void updateBpmnProcess(CommandContext commandContext, Process process,
             BpmnModel bpmnModel, ProcessDefinitionEntity originalProcessDefinitionEntity, DeploymentEntity newDeploymentEntity) {
-        
-        List<StartEvent> startEvents = process.findFlowElementsOfType(StartEvent.class);
-        StartEvent initialStartEvent = null;
-        for (StartEvent startEvent : startEvents) {
-            if (startEvent.getEventDefinitions().size() == 0) {
-                initialStartEvent = startEvent;
-                break;
-                
-            } else if (initialStartEvent == null) {
-                initialStartEvent = startEvent;
-            }
-        }
+// 步骤1：查找process内 def key 为 subProcessDefinitionKey 的SubProcess，
+// 1.1 如果找到，设为 targetSubProcess
 
-        // find the subProcess specified by subProcessDefinitionKey and add new a new task into it.
-        ParallelGateway parallelGateway = new ParallelGateway();
-        parallelGateway.setId(dynamicUserTaskBuilder.nextForkGatewayId(process.getFlowElementMap()));
-        process.addFlowElement(parallelGateway);
-
-        UserTask userTask = new UserTask();
-        if (dynamicUserTaskBuilder.getId() != null) {
-            userTask.setId(dynamicUserTaskBuilder.getId());
-        } else {
-            userTask.setId(dynamicUserTaskBuilder.nextTaskId(process.getFlowElementMap()));
-        }
-        dynamicUserTaskBuilder.setDynamicTaskId(userTask.getId());
-        
-        userTask.setName(dynamicUserTaskBuilder.getName());
-        userTask.setAssignee(dynamicUserTaskBuilder.getAssignee());
-        process.addFlowElement(userTask);
-        
-        EndEvent endEvent = new EndEvent();
-        endEvent.setId(dynamicUserTaskBuilder.nextEndEventId(process.getFlowElementMap()));
-        process.addFlowElement(endEvent);
-
-        SequenceFlow flowToUserTask = new SequenceFlow(parallelGateway.getId(), userTask.getId());
-        flowToUserTask.setId(dynamicUserTaskBuilder.nextFlowId(process.getFlowElementMap()));
-        process.addFlowElement(flowToUserTask);
-
-        SequenceFlow flowFromUserTask = new SequenceFlow(userTask.getId(), endEvent.getId());
-        flowFromUserTask.setId(dynamicUserTaskBuilder.nextFlowId(process.getFlowElementMap()));
-        process.addFlowElement(flowFromUserTask);
-
-        SequenceFlow initialFlow = initialStartEvent.getOutgoingFlows().get(0);
-        initialFlow.setSourceRef(parallelGateway.getId());
-
-        SequenceFlow flowFromStart = new SequenceFlow(initialStartEvent.getId(), parallelGateway.getId());
-        flowFromStart.setId(dynamicUserTaskBuilder.nextFlowId(process.getFlowElementMap()));
-        process.addFlowElement(flowFromStart);
-        
-        GraphicInfo elementGraphicInfo = bpmnModel.getGraphicInfo(initialStartEvent.getId());
-        if (elementGraphicInfo != null) {
-            double yDiff = 0;
-            double xDiff = 80;
-            if (elementGraphicInfo.getY() < 173) {
-                yDiff = 173 - elementGraphicInfo.getY();
-                elementGraphicInfo.setY(173);
-            }
-            
-            Map<String, GraphicInfo> locationMap = bpmnModel.getLocationMap();
-            for (String locationId : locationMap.keySet()) {
-                if (initialStartEvent.getId().equals(locationId)) {
-                    continue;
-                }
-                
-                GraphicInfo locationGraphicInfo = locationMap.get(locationId);
-                locationGraphicInfo.setX(locationGraphicInfo.getX() + xDiff);
-                locationGraphicInfo.setY(locationGraphicInfo.getY() + yDiff);
-            }
-            
-            Map<String, List<GraphicInfo>> flowLocationMap = bpmnModel.getFlowLocationMap();
-            for (String flowId : flowLocationMap.keySet()) {
-                if (flowFromStart.getId().equals(flowId)) {
-                    continue;
-                }
-                
-                List<GraphicInfo> flowGraphicInfoList = flowLocationMap.get(flowId);
-                for (GraphicInfo flowGraphicInfo : flowGraphicInfoList) {
-                    flowGraphicInfo.setX(flowGraphicInfo.getX() + xDiff);
-                    flowGraphicInfo.setY(flowGraphicInfo.getY() + yDiff);
-                }
-            }
-            
-            GraphicInfo forkGraphicInfo = new GraphicInfo(elementGraphicInfo.getX() + 75, elementGraphicInfo.getY() - 5, 40, 40);
-            bpmnModel.addGraphicInfo(parallelGateway.getId(), forkGraphicInfo);
-            
-            bpmnModel.addFlowGraphicInfoList(flowFromStart.getId(), createWayPoints(elementGraphicInfo.getX() + 30, elementGraphicInfo.getY() + 15, 
-                            elementGraphicInfo.getX() + 75, elementGraphicInfo.getY() + 15));
-            
-            GraphicInfo newTaskGraphicInfo = new GraphicInfo(elementGraphicInfo.getX() + 185, elementGraphicInfo.getY() - 163, 80, 100);
-            bpmnModel.addGraphicInfo(userTask.getId(), newTaskGraphicInfo);
-            
-            bpmnModel.addFlowGraphicInfoList(flowToUserTask.getId(), createWayPoints(elementGraphicInfo.getX() + 95, elementGraphicInfo.getY() - 5, 
-                            elementGraphicInfo.getX() + 95, elementGraphicInfo.getY() - 123, elementGraphicInfo.getX() + 185, elementGraphicInfo.getY() - 123));
-            
-            GraphicInfo endGraphicInfo = new GraphicInfo(elementGraphicInfo.getX() + 335, elementGraphicInfo.getY() - 137, 28, 28);
-            bpmnModel.addGraphicInfo(endEvent.getId(), endGraphicInfo);
-            
-            bpmnModel.addFlowGraphicInfoList(flowFromUserTask.getId(), createWayPoints(elementGraphicInfo.getX() + 285, elementGraphicInfo.getY() - 123, 
-                            elementGraphicInfo.getX() + 335, elementGraphicInfo.getY() - 123));
-        }
-        
-        BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, process, bpmnModel, originalProcessDefinitionEntity, newDeploymentEntity);
+        // 输入的目标SubProcess的 subProcessFQName 为 "A.B.C.D.E.F.G"；
+        // 在FlowableTaskExtraInfo里寻找 activity_name==subProcessFQName；
+        // func1 如果找到，那么得到 subProcessDefinitionKey，以及对应的已经存在的 targetSubProcess；
+        //     获取 targetSubProcess 里的 startParallelGateway 和 endParallelGateway；
+        //     然后新建目标userTask，将其插入到startParallelGateway 和 endParallelGateway之间；
+        //     创建 targetSubProcess 的childExecution，关联到userTask
+        //
+        // 没有找到该 SubProcess，那么寻找 activity_name == "A.B.C.D.E.F" 的 subProcessDefinitionKey 和 targetSubProcess；
+        // 如果找到，
+        //     func2 在 targetSubProcess 内创建 name=="A.B.C.D.E.F.G"、包含 startEvent、startParGW、endParGW、endEvent 的 SubProcess
+        //     调用 func1 插入 userTask
+        // 如果没找到，那么寻找 activity_name == "A.B.C.D.E" 的 subProcessDefinitionKey 和 targetSubProcess
+        //      如果找到 那么 调用 func2 相继插入 activity_name == "A.B.C.D.E.F" 和 activity_name == "A.B.C.D.E.F.G"
+        //       调用 func1 插入 userTask
+        //
+        addUserTaskToSubProcess(process);
     }
 
     @Override
     protected void updateExecutions(CommandContext commandContext, ProcessDefinitionEntity processDefinitionEntity, 
             ExecutionEntity processInstance, List<ExecutionEntity> childExecutions) {
+        BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(processDefinitionEntity.getId());
 
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
-        ExecutionEntity execution = executionEntityManager.createChildExecution(processInstance);
+
+        List<ActivityInstanceEntity> subProcessActivityIE = CommandContextUtil.getActivityInstanceEntityManager(commandContext).findActivityInstancesByActivityId(this.subProcessActivityId);
+
+        ExecutionEntity subProcessExecutionEntity = executionEntityManager.findById(subProcessActivityIE.get(0).getExecutionId());
+
+        ExecutionEntity execution = executionEntityManager.createChildExecution(subProcessExecutionEntity);
         
-        BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(processDefinitionEntity.getId());
         UserTask userTask = (UserTask) bpmnModel.getProcessById(processDefinitionEntity.getKey()).getFlowElement(dynamicUserTaskBuilder.getDynamicTaskId());
         execution.setCurrentFlowElement(userTask);
 
