@@ -12,6 +12,7 @@ public class DqDynamicUserTaskBuilder extends DynamicUserTaskBuilder{
     private String dueDateStr;
     private String wechatNotificationServiceUrl;
     private List<String> candidateUserRoles;
+    private String constructionCandidateGroupsStr;
 
     public List<CustomProperty> getTaskCustomProperties() {
         return customProperties;
@@ -67,5 +68,13 @@ public class DqDynamicUserTaskBuilder extends DynamicUserTaskBuilder{
 
     public void setMeasurementTimeSpan(int measurementTimeSpan) {
         this.measurementTimeSpan = measurementTimeSpan;
+    }
+
+    public String getConstructionCandidateGroupsStr() {
+        return constructionCandidateGroupsStr;
+    }
+
+    public void setConstructionCandidateGroupsStr(String constructionCandidateGroupsStr) {
+        this.constructionCandidateGroupsStr = constructionCandidateGroupsStr;
     }
 }

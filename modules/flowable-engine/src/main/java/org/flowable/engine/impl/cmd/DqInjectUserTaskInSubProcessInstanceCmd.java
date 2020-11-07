@@ -113,7 +113,7 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         userTaskWaitingTimer.addEventDefinition(startEventTED);
         parentProcess.addFlowElement(userTaskWaitingTimer);
 
-        String notificationContent = "{\"role\": \"CONSTRUCT_DEPT_EMPLOYEE\", \"title\": \"请开始"+ taskName +"的施工\", \"message\": \"谢谢配合\"}";
+        String notificationContent = "{\"role\": \"" + dynamicUserTaskBuilder.getConstructionCandidateGroupsStr() +"\", \"title\": \"请开始"+ taskName +"的施工\", \"message\": \"谢谢配合\"}";
         HttpServiceTask sendConstructionNotificationTask = buildReminderTask(
                 parentProcessUUIDBasedOnFQProcessName, taskId,
                 parentProcessName, taskName,
