@@ -13,6 +13,8 @@ public class DqDynamicUserTaskBuilder extends DynamicUserTaskBuilder{
     private String wechatNotificationServiceUrl;
     private List<String> candidateUserRoles;
     private String constructionCandidateGroupsStr;
+    private String parentFQNameUUID;
+    private String parentFQName;
 
     public List<CustomProperty> getTaskCustomProperties() {
         return customProperties;
@@ -76,5 +78,21 @@ public class DqDynamicUserTaskBuilder extends DynamicUserTaskBuilder{
 
     public void setConstructionCandidateGroupsStr(String constructionCandidateGroupsStr) {
         this.constructionCandidateGroupsStr = constructionCandidateGroupsStr;
+    }
+
+    public String getParentFQNameUUID() {
+        return parentFQNameUUID;
+    }
+
+    public void setParentFQNameUUID(String parentFQNameUUID) {
+        this.parentFQNameUUID = parentFQNameUUID;
+    }
+
+    public String getParentFQName() {
+        return parentFQName;
+    }
+
+    public void setParentFQName(String parentFQName) {
+        this.parentFQName = parentFQName;
     }
 }

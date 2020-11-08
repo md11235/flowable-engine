@@ -273,7 +273,8 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         }
         ParallelGateway subProcessInnerEndPGW = (ParallelGateway) endEventSourceFlowElement;
 
-        final String parentProcessUUIDBasedOnFQProcessName = dynamicUserTaskBuilder.getParentProcessUUID();
+        final String parentProcessUUIDBasedOnFQProcessName = "-parent-" + dynamicUserTaskBuilder.getParentFQNameUUID();
+
         final String parentProcessName = targetSubProcess.getName();
 
         this.firstActivityId = buildActivitiesForUserTask(targetSubProcess, parentProcessUUIDBasedOnFQProcessName,
