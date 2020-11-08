@@ -254,7 +254,9 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         ParallelGateway subProcessInnerStartPGW = (ParallelGateway) startEventTargetFlowElement;
 
         List<EndEvent> endEventList = targetSubProcess.findAllSubFlowElementInFlowMapOfType(EndEvent.class).stream().filter(
-                _endEvent -> _endEvent.getName().contains("ID-innerEndEvent-")).collect(Collectors.toList());
+                _endEvent -> {
+                    return (_endEvent != null) && (_endEvent.getName() != null) && _endEvent.getName().contains("ID-innerEndEvent-");
+                }).collect(Collectors.toList());
         if(endEventList.size() != 1) {
             throw new FlowableException(subProcessDefDescription + "包含的 EndEvent 对象数不等于1。");
         }
