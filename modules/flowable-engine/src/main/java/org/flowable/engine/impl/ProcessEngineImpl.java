@@ -18,16 +18,7 @@ import org.flowable.common.engine.api.delegate.event.FlowableEngineEventType;
 import org.flowable.common.engine.impl.cfg.TransactionContextFactory;
 import org.flowable.common.engine.impl.interceptor.CommandExecutor;
 import org.flowable.common.engine.impl.interceptor.SessionFactory;
-import org.flowable.engine.DynamicBpmnService;
-import org.flowable.engine.FormService;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.IdentityService;
-import org.flowable.engine.ManagementService;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.ProcessEngines;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
+import org.flowable.engine.*;
 import org.flowable.engine.delegate.event.impl.FlowableEventBuilder;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.flowable.job.service.impl.asyncexecutor.AsyncExecutor;
@@ -50,6 +41,7 @@ public class ProcessEngineImpl implements ProcessEngine {
     protected FormService formService;
     protected ManagementService managementService;
     protected DynamicBpmnService dynamicBpmnService;
+    protected DqDynamicBpmnService dqDynamicBpmnService;
     protected AsyncExecutor asyncExecutor;
     protected AsyncExecutor asyncHistoryExecutor;
     protected CommandExecutor commandExecutor;
@@ -68,6 +60,7 @@ public class ProcessEngineImpl implements ProcessEngine {
         this.formService = processEngineConfiguration.getFormService();
         this.managementService = processEngineConfiguration.getManagementService();
         this.dynamicBpmnService = processEngineConfiguration.getDynamicBpmnService();
+        this.dqDynamicBpmnService = processEngineConfiguration.getDqDynamicBpmnService();
         this.asyncExecutor = processEngineConfiguration.getAsyncExecutor();
         this.asyncHistoryExecutor = processEngineConfiguration.getAsyncHistoryExecutor();
         this.commandExecutor = processEngineConfiguration.getCommandExecutor();
@@ -171,6 +164,10 @@ public class ProcessEngineImpl implements ProcessEngine {
     @Override
     public DynamicBpmnService getDynamicBpmnService() {
         return dynamicBpmnService;
+    }
+
+    public DqDynamicBpmnService getDqDynamicBpmnService() {
+        return dqDynamicBpmnService;
     }
 
     @Override

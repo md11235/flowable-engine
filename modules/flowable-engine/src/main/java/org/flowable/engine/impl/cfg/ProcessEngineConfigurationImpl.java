@@ -89,23 +89,7 @@ import org.flowable.common.engine.impl.scripting.BeansResolverFactory;
 import org.flowable.common.engine.impl.scripting.ResolverFactory;
 import org.flowable.common.engine.impl.scripting.ScriptBindingsFactory;
 import org.flowable.common.engine.impl.scripting.ScriptingEngines;
-import org.flowable.engine.CandidateManager;
-import org.flowable.engine.DefaultCandidateManager;
-import org.flowable.engine.DynamicBpmnService;
-import org.flowable.engine.ExecutionQueryInterceptor;
-import org.flowable.engine.FlowableEngineAgenda;
-import org.flowable.engine.FlowableEngineAgendaFactory;
-import org.flowable.engine.FormService;
-import org.flowable.engine.HistoricProcessInstanceQueryInterceptor;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.IdentityService;
-import org.flowable.engine.ManagementService;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.ProcessEngineConfiguration;
-import org.flowable.engine.ProcessInstanceQueryInterceptor;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
+import org.flowable.engine.*;
 import org.flowable.engine.app.AppResourceConverter;
 import org.flowable.engine.compatibility.DefaultFlowable5CompatibilityHandlerFactory;
 import org.flowable.engine.compatibility.Flowable5CompatibilityHandler;
@@ -113,18 +97,7 @@ import org.flowable.engine.compatibility.Flowable5CompatibilityHandlerFactory;
 import org.flowable.engine.delegate.event.impl.BpmnModelEventDispatchAction;
 import org.flowable.engine.dynamic.DynamicStateManager;
 import org.flowable.engine.form.AbstractFormType;
-import org.flowable.engine.impl.DefaultProcessJobParentStateResolver;
-import org.flowable.engine.impl.DynamicBpmnServiceImpl;
-import org.flowable.engine.impl.FormServiceImpl;
-import org.flowable.engine.impl.HistoryServiceImpl;
-import org.flowable.engine.impl.IdentityServiceImpl;
-import org.flowable.engine.impl.ManagementServiceImpl;
-import org.flowable.engine.impl.ProcessEngineImpl;
-import org.flowable.engine.impl.RepositoryServiceImpl;
-import org.flowable.engine.impl.RuntimeServiceImpl;
-import org.flowable.engine.impl.SchemaOperationProcessEngineClose;
-import org.flowable.engine.impl.SchemaOperationsProcessEngineBuild;
-import org.flowable.engine.impl.TaskServiceImpl;
+import org.flowable.engine.impl.*;
 import org.flowable.engine.impl.agenda.AgendaSessionFactory;
 import org.flowable.engine.impl.agenda.DefaultFlowableEngineAgendaFactory;
 import org.flowable.engine.impl.app.AppDeployer;
@@ -424,6 +397,7 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
     protected FormService formService = new FormServiceImpl();
     protected ManagementService managementService = new ManagementServiceImpl();
     protected DynamicBpmnService dynamicBpmnService = new DynamicBpmnServiceImpl(this);
+    protected DqDynamicBpmnService dqDynamicBpmnService = new DqDynamicBpmnServiceImpl(this);
 
     // IDM ENGINE /////////////////////////////////////////////////////
     protected boolean disableIdmEngine;
@@ -1056,6 +1030,7 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
         initService(formService);
         initService(managementService);
         initService(dynamicBpmnService);
+        initService(dqDynamicBpmnService);
     }
     
     @Override
@@ -2643,6 +2618,10 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
 
     public DynamicBpmnService getDynamicBpmnService() {
         return dynamicBpmnService;
+    }
+
+    public DqDynamicBpmnService getDqDynamicBpmnService() {
+        return dqDynamicBpmnService;
     }
 
     public ProcessEngineConfigurationImpl setDynamicBpmnService(DynamicBpmnService dynamicBpmnService) {

@@ -261,7 +261,6 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
     protected FormService formService = new FormServiceImpl();
     protected ManagementService managementService = new ManagementServiceImpl();
     protected DynamicBpmnService dynamicBpmnService = new DynamicBpmnServiceImpl(this);
-    protected DqDynamicBpmnService dqDynamicBpmnService = new DqDynamicBpmnServiceImpl(this);
 
     // IDM ENGINE SERVICES /////////////////////////////////////////////////////
     protected FlowableEventDispatcher idmEventDispatcher;
@@ -692,7 +691,6 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
         initService(formService);
         initService(managementService);
         initService(dynamicBpmnService);
-        initService(dqDynamicBpmnService);
     }
 
     protected void initService(Object service) {
@@ -1634,10 +1632,6 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
 
     public DynamicBpmnService getDynamicBpmnService() {
         return dynamicBpmnService;
-    }
-
-    public DqDynamicBpmnService getDqDynamicBpmnService() {
-        return dqDynamicBpmnService;
     }
 
     public ProcessEngineConfigurationImpl setManagementService(ManagementService managementService) {
