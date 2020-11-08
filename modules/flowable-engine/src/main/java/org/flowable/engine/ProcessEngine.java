@@ -61,5 +61,7 @@ public interface ProcessEngine {
 
     DynamicBpmnService getDynamicBpmnService();
 
+    DqDynamicBpmnService getDqDynamicBpmnService();
+
     ProcessEngineConfiguration getProcessEngineConfiguration();
 }
