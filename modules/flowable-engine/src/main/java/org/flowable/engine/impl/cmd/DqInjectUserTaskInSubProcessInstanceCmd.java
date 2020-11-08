@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /*
@@ -252,7 +253,8 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         }
         ParallelGateway subProcessInnerStartPGW = (ParallelGateway) startEventTargetFlowElement;
 
-        List<EndEvent> endEventList = targetSubProcess.findAllSubFlowElementInFlowMapOfType(EndEvent.class);
+        List<EndEvent> endEventList = targetSubProcess.findAllSubFlowElementInFlowMapOfType(EndEvent.class).stream().filter(
+                _endEvent -> _endEvent.getName().contains("ID-innerEndEvent-")).collect(Collectors.toList());
         if(endEventList.size() != 1) {
             throw new FlowableException(subProcessDefDescription + "包含的 EndEvent 对象数不等于1。");
         }
