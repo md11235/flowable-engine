@@ -101,6 +101,10 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         String taskDueDateStr = dynamicUserTaskBuilder.getDueDateStr();
         String _wechatNotificationServiceUrl = dynamicUserTaskBuilder.getWechatNotificationServiceUrl();
         List<String> userRoles = dynamicUserTaskBuilder.getCandidateUserRoles();
+        String constructionCandidateGroupsStr = dynamicUserTaskBuilder.getConstructionCandidateGroupsStr();
+        List<CustomProperty> customProperties = dynamicUserTaskBuilder.getTaskCustomProperties();
+        int taskMeasurementTimeSpan = dynamicUserTaskBuilder.getTaskMeasurementTimeSpan();
+        // dynamicUserTaskBuilder.getParentProcessUUID();
 
         // in order to notify that this task has started.
         IntermediateCatchEvent userTaskWaitingTimer = new IntermediateCatchEvent();
@@ -113,7 +117,7 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         userTaskWaitingTimer.addEventDefinition(startEventTED);
         parentProcess.addFlowElement(userTaskWaitingTimer);
 
-        String notificationContent = "{\"role\": \"" + dynamicUserTaskBuilder.getConstructionCandidateGroupsStr() +"\", \"title\": \"请开始"+ taskName +"的施工\", \"message\": \"谢谢配合\"}";
+        String notificationContent = "{\"role\": \"" + constructionCandidateGroupsStr +"\", \"title\": \"请开始"+ taskName +"的施工\", \"message\": \"谢谢配合\"}";
         HttpServiceTask sendConstructionNotificationTask = buildReminderTask(
                 parentProcessUUIDBasedOnFQProcessName, taskId,
                 parentProcessName, taskName,
@@ -149,7 +153,6 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         userTask.setDueDate(taskDueDateStr);
         userTask.setCandidateGroups(userRoles);
 
-        List<CustomProperty> customProperties = dynamicUserTaskBuilder.getTaskCustomProperties();
         userTask.setCustomProperties(customProperties);
 
         parentProcess.addFlowElement(userTask);
@@ -158,7 +161,6 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         SequenceFlow flow7 = new SequenceFlow(waitingTimerOutgoingPGW.getId(), userTask.getId());
         parentProcess.addFlowElement(flow7);
 
-        int taskMeasurementTimeSpan = dynamicUserTaskBuilder.getTaskMeasurementTimeSpan();
         if(taskMeasurementTimeSpan >= 0) {
             HttpServiceTask sendMeasurementNotificationTask = new HttpServiceTask();
             sendMeasurementNotificationTask.setId("ID-measurementNotificationTask-" + taskId + parentProcessUUIDBasedOnFQProcessName);
