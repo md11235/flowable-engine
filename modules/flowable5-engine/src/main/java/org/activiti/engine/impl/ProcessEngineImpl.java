@@ -51,6 +51,7 @@ public class ProcessEngineImpl implements ProcessEngine {
     protected FormService formService;
     protected ManagementService managementService;
     protected DynamicBpmnService dynamicBpmnService;
+    protected DqDynamicBpmnService dqDynamicBpmnService;
     protected CommandExecutor commandExecutor;
     protected Map<Class<?>, SessionFactory> sessionFactories;
     protected ExpressionManager expressionManager;
@@ -68,6 +69,7 @@ public class ProcessEngineImpl implements ProcessEngine {
         this.formService = processEngineConfiguration.getFormService();
         this.managementService = processEngineConfiguration.getManagementService();
         this.dynamicBpmnService = processEngineConfiguration.getDynamicBpmnService();
+        this.dqDynamicBpmnService = processEngineConfiguration.getDqDynamicBpmnService();
         this.commandExecutor = processEngineConfiguration.getCommandExecutor();
         this.sessionFactories = processEngineConfiguration.getSessionFactories();
         this.transactionContextFactory = processEngineConfiguration.getTransactionContextFactory();
@@ -145,6 +147,10 @@ public class ProcessEngineImpl implements ProcessEngine {
     @Override
     public DynamicBpmnService getDynamicBpmnService() {
         return dynamicBpmnService;
+    }
+
+    public DqDynamicBpmnService getDqDynamicBpmnService() {
+        return dqDynamicBpmnService;
     }
 
     @Override
