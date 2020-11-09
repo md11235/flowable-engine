@@ -88,41 +88,39 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
             ExecutionEntityManager executionEntityManager,
             List<SubProcess> nextLevelSubProcesses) {
         nextLevelSubProcesses.stream().forEach(nextLevelSubProcess -> {
-            while (nextLevelSubProcess != null) {
-                ExecutionEntity parentExecutionEntity = getCurrentContainerExecutionEntity(
-                        commandContext, processInstance, executionEntityManager, nextLevelSubProcess.getParentContainer());
+            ExecutionEntity parentExecutionEntity = getCurrentContainerExecutionEntity(
+                    commandContext, processInstance, executionEntityManager, nextLevelSubProcess.getParentContainer());
 
-                ExecutionEntity nextLevelSubProcessExecution = executionEntityManager.createChildExecution(parentExecutionEntity);
-                nextLevelSubProcessExecution.setScope(true);
-                nextLevelSubProcessExecution.setCurrentFlowElement(nextLevelSubProcess);
-                CommandContextUtil.getActivityInstanceEntityManager(commandContext).recordActivityStart(nextLevelSubProcessExecution);
+            ExecutionEntity nextLevelSubProcessExecution = executionEntityManager.createChildExecution(parentExecutionEntity);
+            nextLevelSubProcessExecution.setScope(true);
+            nextLevelSubProcessExecution.setCurrentFlowElement(nextLevelSubProcess);
+            CommandContextUtil.getActivityInstanceEntityManager(commandContext).recordActivityStart(nextLevelSubProcessExecution);
 
-                ExecutionEntity nextLevelSubProcessChildExecution = executionEntityManager.createChildExecution(nextLevelSubProcessExecution);
+            ExecutionEntity nextLevelSubProcessChildExecution = executionEntityManager.createChildExecution(nextLevelSubProcessExecution);
 
-                StartEvent nextLevelSubProcessStartEvent = null;
-                for (FlowElement subElement : nextLevelSubProcess.getFlowElements()) {
-                    if (subElement instanceof StartEvent) {
-                        StartEvent startEvent = (StartEvent) subElement;
-                        if (startEvent.getEventDefinitions().size() == 0) {
-                            nextLevelSubProcessStartEvent = startEvent;
-                            break;
-                        }
+            StartEvent nextLevelSubProcessStartEvent = null;
+            for (FlowElement subElement : nextLevelSubProcess.getFlowElements()) {
+                if (subElement instanceof StartEvent) {
+                    StartEvent startEvent = (StartEvent) subElement;
+                    if (startEvent.getEventDefinitions().size() == 0) {
+                        nextLevelSubProcessStartEvent = startEvent;
+                        break;
                     }
                 }
-
-                if (nextLevelSubProcessStartEvent == null) {
-                    throw new FlowableException("Could not find a none start event in dynamic sub process");
-                }
-
-                nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
-
-                Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
-
-                func1(commandContext,
-                        processInstance,
-                        executionEntityManager,
-                        getNextLevelSubProcess(nextLevelSubProcess));
             }
+
+            if (nextLevelSubProcessStartEvent == null) {
+                throw new FlowableException("Could not find a none start event in dynamic sub process");
+            }
+
+            nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
+
+            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
+
+            func1(commandContext,
+                    processInstance,
+                    executionEntityManager,
+                    getNextLevelSubProcess(nextLevelSubProcess));
         });
     }
 
