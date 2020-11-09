@@ -15,106 +15,106 @@ package org.flowable.engine.impl.dynamic;
 public class DqDynamicEmbeddedSubProcessBuilder extends DynamicEmbeddedSubProcessBuilder {
 
     // parent container def key
-    protected String dynamicSubProcessParentDefKey;
-    protected String dynamicSubProcessFQName;
-    protected String dynamicSubProcessOnlyUUID;
-    protected String startDateStr;
-    protected String baseCompletionDateStr;
-    protected String managementLevelStr;
-    protected String dynamicSubProcessDefKey;
+    protected String parentDefKeyOfNewDynamicActivity;
+//    protected String dynamicSubProcessFQName;
+//    protected String dynamicSubProcessOnlyUUID;
+//    protected String startDateStr;
+//    protected String baseCompletionDateStr;
+//    protected String managementLevelStr;
+//    protected String dynamicSubProcessDefKey;
 
     public DqDynamicEmbeddedSubProcessBuilder() {
 
     }
 
-    public String getDynamicSubProcessFQName() {
-        return dynamicSubProcessFQName;
+//    public String getDynamicSubProcessFQName() {
+//        return dynamicSubProcessFQName;
+//    }
+//
+//    public void setDynamicSubProcessFQName(String dynamicSubProcessFQName) {
+//        this.dynamicSubProcessFQName = dynamicSubProcessFQName;
+//    }
+//
+//    public String getDynamicSubProcessOnlyUUID() {
+//        return dynamicSubProcessOnlyUUID;
+//    }
+//
+//    public void setDynamicSubProcessOnlyUUID(String dynamicSubProcessOnlyUUID) {
+//        this.dynamicSubProcessOnlyUUID = dynamicSubProcessOnlyUUID;
+//    }
+//
+//    public String getStartDateStr() {
+//        return startDateStr;
+//    }
+//
+//    public void setStartDateStr(String startDateStr) {
+//        this.startDateStr = startDateStr;
+//    }
+//
+//    public String getManagementLevelStr() {
+//        return managementLevelStr;
+//    }
+//
+//    public void setManagementLevelStr(String managementLevelStr) {
+//        this.managementLevelStr = managementLevelStr;
+//    }
+//
+//    public String getBaseCompletionDateStr() {
+//        return baseCompletionDateStr;
+//    }
+//
+//    public void setBaseCompletionDateStr(String baseCompletionDateStr) {
+//        this.baseCompletionDateStr = baseCompletionDateStr;
+//    }
+
+    public String getParentDefKeyOfNewDynamicActivity() {
+        return parentDefKeyOfNewDynamicActivity;
     }
 
-    public void setDynamicSubProcessFQName(String dynamicSubProcessFQName) {
-        this.dynamicSubProcessFQName = dynamicSubProcessFQName;
+    public void setParentDefKeyOfNewDynamicActivity(String parentDefKeyOfNewDynamicActivity) {
+        this.parentDefKeyOfNewDynamicActivity = parentDefKeyOfNewDynamicActivity;
     }
 
-    public String getDynamicSubProcessOnlyUUID() {
-        return dynamicSubProcessOnlyUUID;
-    }
-
-    public void setDynamicSubProcessOnlyUUID(String dynamicSubProcessOnlyUUID) {
-        this.dynamicSubProcessOnlyUUID = dynamicSubProcessOnlyUUID;
-    }
-
-    public String getStartDateStr() {
-        return startDateStr;
-    }
-
-    public void setStartDateStr(String startDateStr) {
-        this.startDateStr = startDateStr;
-    }
-
-    public String getManagementLevelStr() {
-        return managementLevelStr;
-    }
-
-    public void setManagementLevelStr(String managementLevelStr) {
-        this.managementLevelStr = managementLevelStr;
-    }
-
-    public String getBaseCompletionDateStr() {
-        return baseCompletionDateStr;
-    }
-
-    public void setBaseCompletionDateStr(String baseCompletionDateStr) {
-        this.baseCompletionDateStr = baseCompletionDateStr;
-    }
-
-    public String getDynamicSubProcessParentDefKey() {
-        return dynamicSubProcessParentDefKey;
-    }
-
-    public void setDynamicSubProcessParentDefKey(String dynamicSubProcessParentDefKey) {
-        this.dynamicSubProcessParentDefKey = dynamicSubProcessParentDefKey;
-    }
-
-    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessParentId(String parentId) {
-        this.dynamicSubProcessParentDefKey = parentId;
+    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessParentId(String parentDefKey) {
+        this.parentDefKeyOfNewDynamicActivity = parentDefKey;
         return this;
     }
 
-    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessFQName(String name) {
-        this.dynamicSubProcessFQName = name;
-        return this;
-    }
-
-    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessUUID(String uuid) {
-        this.dynamicSubProcessOnlyUUID = uuid;
-        return this;
-    }
-
-    public DqDynamicEmbeddedSubProcessBuilder startDateStr(String dateStr) {
-        this.startDateStr = dateStr;
-        return this;
-    }
-
-    public DqDynamicEmbeddedSubProcessBuilder baseCompletionDateStr(String dateStr) {
-        this.baseCompletionDateStr = dateStr;
-        return this;
-    }
-
-    public DqDynamicEmbeddedSubProcessBuilder managementLevelStr(String levelStr) {
-        this.managementLevelStr = levelStr;
-        return this;
-    }
-
-    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessDefKey(String defKey) {
-        this.dynamicSubProcessDefKey = defKey;
-        return this;
-    }
-
-    public String getDynamicSubProcessDefKey() {
-        return dynamicSubProcessDefKey;
-    }
-
-    public void setDynamicSubProcessDefKey(String dynamicSubProcessDefKey) {
-        this.dynamicSubProcessDefKey = dynamicSubProcessDefKey;
-    }
+//    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessFQName(String name) {
+//        this.dynamicSubProcessFQName = name;
+//        return this;
+//    }
+//
+//    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessUUID(String uuid) {
+//        this.dynamicSubProcessOnlyUUID = uuid;
+//        return this;
+//    }
+//
+//    public DqDynamicEmbeddedSubProcessBuilder startDateStr(String dateStr) {
+//        this.startDateStr = dateStr;
+//        return this;
+//    }
+//
+//    public DqDynamicEmbeddedSubProcessBuilder baseCompletionDateStr(String dateStr) {
+//        this.baseCompletionDateStr = dateStr;
+//        return this;
+//    }
+//
+//    public DqDynamicEmbeddedSubProcessBuilder managementLevelStr(String levelStr) {
+//        this.managementLevelStr = levelStr;
+//        return this;
+//    }
+//
+//    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessDefKey(String defKey) {
+//        this.dynamicSubProcessDefKey = defKey;
+//        return this;
+//    }
+//
+//    public String getDynamicSubProcessDefKey() {
+//        return dynamicSubProcessDefKey;
+//    }
+//
+//    public void setDynamicSubProcessDefKey(String dynamicSubProcessDefKey) {
+//        this.dynamicSubProcessDefKey = dynamicSubProcessDefKey;
+//    }
 }

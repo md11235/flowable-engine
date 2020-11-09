@@ -24,6 +24,7 @@ import org.flowable.engine.impl.dynamic.DqDynamicEmbeddedSubProcessBuilder;
 import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.util.CommandContextUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDynamicInjectionCmd implements Command<Void> {
@@ -31,7 +32,8 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
     protected String processInstanceId;
     protected DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder;
     protected ActionToBuildSubProcess actionToBuildSubProcessCallback;
-    private FlowElementsContainer parentContainerOfSubProcessHierarchy;
+    private List<Activity> addedActivities;
+    private FlowElementsContainer parentContainer;
 
     public DqInjectEmbeddedSubProcessInProcessInstanceCmd(
             String processInstanceId,
@@ -51,33 +53,77 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
     @Override
     protected void updateBpmnProcess(CommandContext commandContext, Process process,
             BpmnModel bpmnModel, ProcessDefinitionEntity originalProcessDefinitionEntity, DeploymentEntity newDeploymentEntity) {
-        // 查找新的SubProcess的parent container
+        // 查找用于插入新的SubProcess或者UserTask的parent container
         FlowElementsContainer parentContainer = null;
-
-        if(process.getId().equals(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessParentDefKey())) {
+        if(process.getId().equals(dynamicEmbeddedSubProcessBuilder.getParentDefKeyOfNewDynamicActivity())) {
             parentContainer = process;
         } else {
             List<SubProcess> subProcessList = process.findFlowElementsOfType(SubProcess.class, true);
             for(SubProcess aSubProcess : subProcessList) {
-                if(aSubProcess.getId().equals(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessParentDefKey())) {
+                if(aSubProcess.getId().equals(dynamicEmbeddedSubProcessBuilder.getParentDefKeyOfNewDynamicActivity())) {
                     parentContainer = aSubProcess;
                     break;
                 }
             }
         }
 
+        this.parentContainer = parentContainer;
+
         // 往parent container里插入新的SubProcess
         // actionToBuildSubProcessCallback.build 返回的是新的子流程里的StartEvent的ID
         if(this.actionToBuildSubProcessCallback == null) {
             throw new FlowableException("构建子流程的回调接口为空。");
         }
-        this.parentContainerOfSubProcessHierarchy =
+        this.addedActivities =
                 this.actionToBuildSubProcessCallback.build(
                         parentContainer,
                         this.dynamicEmbeddedSubProcessBuilder);
 
-        BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, this.parentContainerOfSubProcessHierarchy,
+        BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, parentContainer,
                 bpmnModel, originalProcessDefinitionEntity, newDeploymentEntity);
+    }
+
+    private void func1(
+            CommandContext commandContext, ExecutionEntity processInstance,
+            ExecutionEntityManager executionEntityManager,
+            List<SubProcess> nextLevelSubProcesses) {
+        nextLevelSubProcesses.stream().forEach(nextLevelSubProcess -> {
+            while (nextLevelSubProcess != null) {
+                ExecutionEntity parentExecutionEntity = getCurrentContainerExecutionEntity(
+                        commandContext, processInstance, executionEntityManager, nextLevelSubProcess.getParentContainer());
+
+                ExecutionEntity nextLevelSubProcessExecution = executionEntityManager.createChildExecution(parentExecutionEntity);
+                nextLevelSubProcessExecution.setScope(true);
+                nextLevelSubProcessExecution.setCurrentFlowElement(nextLevelSubProcess);
+                CommandContextUtil.getActivityInstanceEntityManager(commandContext).recordActivityStart(nextLevelSubProcessExecution);
+
+                ExecutionEntity nextLevelSubProcessChildExecution = executionEntityManager.createChildExecution(nextLevelSubProcessExecution);
+
+                StartEvent nextLevelSubProcessStartEvent = null;
+                for (FlowElement subElement : nextLevelSubProcess.getFlowElements()) {
+                    if (subElement instanceof StartEvent) {
+                        StartEvent startEvent = (StartEvent) subElement;
+                        if (startEvent.getEventDefinitions().size() == 0) {
+                            nextLevelSubProcessStartEvent = startEvent;
+                            break;
+                        }
+                    }
+                }
+
+                if (nextLevelSubProcessStartEvent == null) {
+                    throw new FlowableException("Could not find a none start event in dynamic sub process");
+                }
+
+                nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
+
+                Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
+
+                func1(commandContext,
+                        processInstance,
+                        executionEntityManager,
+                        getNextLevelSubProcess(nextLevelSubProcess));
+            }
+        });
     }
 
     @Override
@@ -86,54 +132,60 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
 
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
         
-        // BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(processDefinitionEntity.getId());
-        // SubProcess newDynamicSubProcess = (SubProcess) bpmnModel.getFlowElement(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessId());
+        // 处理直接添加在this.parentContainer之下的UserTask's
+        // 根据跟生成逻辑紧密绑定的流程图定义来获取UserTask的前置的前置，也即是waitingTimer
+        this.addedActivities.stream().filter(act -> {
+            return (act instanceof UserTask);
+        }).forEach(activity -> {
+            UserTask userTask = (UserTask)activity;
 
-        FlowElementsContainer currentContainer = this.parentContainerOfSubProcessHierarchy;
-
-        SubProcess nextLevelSubProcess = null;
-        ExecutionEntity nextLevelSubProcessExecution = null;
-        while(currentContainer != null) {
-            nextLevelSubProcess = getNextLevelSubProcess(currentContainer);
-
-            if(nextLevelSubProcess == null) {
-                break;
+            List<SequenceFlow> userTaskIncomingFlows = userTask.getIncomingFlows();
+            if(userTaskIncomingFlows.size() != 1) {
+                throw new FlowableException("新增的用户任务入向边数不符合要求（=1）。");
             }
 
-            ExecutionEntity currentExecutionEntity = getCurrentContainerExecutionEntity(
-                    commandContext, processInstance, executionEntityManager, currentContainer);
-
-            nextLevelSubProcessExecution = executionEntityManager.createChildExecution(currentExecutionEntity);
-            nextLevelSubProcessExecution.setScope(true);
-            nextLevelSubProcessExecution.setCurrentFlowElement(nextLevelSubProcess);
-            CommandContextUtil.getActivityInstanceEntityManager(commandContext).recordActivityStart(nextLevelSubProcessExecution);
-
-            ExecutionEntity nextLevelSubProcessChildExecution = executionEntityManager.createChildExecution(nextLevelSubProcessExecution);
-
-            StartEvent nextLevelSubProcessStartEvent = null;
-            for (FlowElement subElement : nextLevelSubProcess.getFlowElements()) {
-                if (subElement instanceof StartEvent) {
-                    StartEvent startEvent = (StartEvent) subElement;
-                    if (startEvent.getEventDefinitions().size() == 0) {
-                        nextLevelSubProcessStartEvent = startEvent;
-                        break;
-                    }
-                }
+            FlowElement maybePGW = userTaskIncomingFlows.get(0).getSourceFlowElement();
+            if(!(maybePGW instanceof ParallelGateway)) {
+                throw new FlowableException("新增的用户任务的前置节点不是ParallelGateway。");
             }
 
-            if (nextLevelSubProcessStartEvent == null) {
-                throw new FlowableException("Could not find a none start event in dynamic sub process");
+            List<SequenceFlow> pgwIncomingFlows = ((ParallelGateway) maybePGW).getIncomingFlows();
+            if(pgwIncomingFlows.size() != 1) {
+                throw new FlowableException("新增的用户任务的前置节点的入向边数不符合要求（=1）。");
             }
 
-            nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
+            FlowElement maybeWaitingTimer = pgwIncomingFlows.get(0).getSourceFlowElement();
+            if(!(maybeWaitingTimer instanceof IntermediateCatchEvent)) {
+                throw new FlowableException("新增的用户任务的前置节点的前置节点不是定时器。");
+            }
 
-            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
+            ExecutionEntity parentExecutionEntity = getCurrentContainerExecutionEntity(
+                    commandContext, processInstance, executionEntityManager, userTask.getParentContainer());
 
-            currentContainer = nextLevelSubProcess;
-        }
+            ExecutionEntity userTaskExecutionEntity = executionEntityManager.createChildExecution(parentExecutionEntity);
+            userTaskExecutionEntity.setCurrentFlowElement(maybeWaitingTimer);
+
+            Context.getAgenda().planContinueProcessOperation(userTaskExecutionEntity);
+        });
+
+        // 递归处理直接添加在this.parentContainer之下的SubProcess's
+        this.addedActivities.stream().filter(act -> {
+            return (act instanceof SubProcess);
+        }).forEach(subProcess -> {
+            List<SubProcess> nextLevelSubProcesses = new ArrayList<>();
+            nextLevelSubProcesses.add((SubProcess)subProcess);
+
+            func1(commandContext,
+                    processInstance,
+                    executionEntityManager,
+                    nextLevelSubProcesses);
+        });
     }
 
-    private ExecutionEntity getCurrentContainerExecutionEntity(CommandContext commandContext, ExecutionEntity processInstance, ExecutionEntityManager executionEntityManager, FlowElementsContainer currentContainer) {
+    private ExecutionEntity getCurrentContainerExecutionEntity(
+            CommandContext commandContext,
+            ExecutionEntity processInstance, ExecutionEntityManager executionEntityManager,
+            FlowElementsContainer currentContainer) {
         ExecutionEntity currentExecutionEntity = null;
         if(currentContainer instanceof SubProcess) {
             List<ActivityInstanceEntity> currentContainerActivityIE = CommandContextUtil
@@ -145,25 +197,21 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
         return currentExecutionEntity;
     }
 
-    private SubProcess getNextLevelSubProcess(FlowElementsContainer currentContainer) {
+    private List<SubProcess> getNextLevelSubProcess(FlowElementsContainer currentContainer) {
         List<SubProcess> subProcessList = null;
-        SubProcess nextLevelSubProcess = null;
-        if(currentContainer instanceof Process) {
-            subProcessList = ((Process) currentContainer).findFlowElementsOfType(SubProcess.class);
-            if(subProcessList.size() != 1) {
-                throw new FlowableException("子流程数据格式格式不正确。");
-            }
-            nextLevelSubProcess = subProcessList.get(0);
-        } else if(currentContainer instanceof SubProcess) {
+        List<SubProcess> nextLevelSubProcesses = new ArrayList<>();
+        if(currentContainer instanceof SubProcess) {
             subProcessList = ((SubProcess) currentContainer).findAllSubFlowElementInFlowMapOfType(SubProcess.class);
             for(SubProcess aSubProcess : subProcessList) {
                 if(aSubProcess.getParentContainer().equals(currentContainer)) {
-                    nextLevelSubProcess = aSubProcess;
+                    nextLevelSubProcesses.add(aSubProcess);
                     break;
                 }
             }
+        } else {
+            throw new FlowableException("错误数据类型:" + currentContainer.getClass());
         }
 
-        return nextLevelSubProcess;
+        return nextLevelSubProcesses;
     }
 }
