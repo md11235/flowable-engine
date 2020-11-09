@@ -15,12 +15,13 @@ package org.flowable.engine.impl.dynamic;
 public class DqDynamicEmbeddedSubProcessBuilder extends DynamicEmbeddedSubProcessBuilder {
 
     // parent container def key
-    protected String dynamicSubProcessParentId;
+    protected String dynamicSubProcessParentDefKey;
     protected String dynamicSubProcessFQName;
     protected String dynamicSubProcessOnlyUUID;
     protected String startDateStr;
     protected String baseCompletionDateStr;
     protected String managementLevelStr;
+    protected String dynamicSubProcessDefKey;
 
     public DqDynamicEmbeddedSubProcessBuilder() {
 
@@ -66,16 +67,16 @@ public class DqDynamicEmbeddedSubProcessBuilder extends DynamicEmbeddedSubProces
         this.baseCompletionDateStr = baseCompletionDateStr;
     }
 
-    public String getDynamicSubProcessParentId() {
-        return dynamicSubProcessParentId;
+    public String getDynamicSubProcessParentDefKey() {
+        return dynamicSubProcessParentDefKey;
     }
 
-    public void setDynamicSubProcessParentId(String dynamicSubProcessParentId) {
-        this.dynamicSubProcessParentId = dynamicSubProcessParentId;
+    public void setDynamicSubProcessParentDefKey(String dynamicSubProcessParentDefKey) {
+        this.dynamicSubProcessParentDefKey = dynamicSubProcessParentDefKey;
     }
 
     public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessParentId(String parentId) {
-        this.dynamicSubProcessParentId = parentId;
+        this.dynamicSubProcessParentDefKey = parentId;
         return this;
     }
 
@@ -102,5 +103,18 @@ public class DqDynamicEmbeddedSubProcessBuilder extends DynamicEmbeddedSubProces
     public DqDynamicEmbeddedSubProcessBuilder managementLevelStr(String levelStr) {
         this.managementLevelStr = levelStr;
         return this;
+    }
+
+    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessDefKey(String defKey) {
+        this.dynamicSubProcessDefKey = defKey;
+        return this;
+    }
+
+    public String getDynamicSubProcessDefKey() {
+        return dynamicSubProcessDefKey;
+    }
+
+    public void setDynamicSubProcessDefKey(String dynamicSubProcessDefKey) {
+        this.dynamicSubProcessDefKey = dynamicSubProcessDefKey;
     }
 }

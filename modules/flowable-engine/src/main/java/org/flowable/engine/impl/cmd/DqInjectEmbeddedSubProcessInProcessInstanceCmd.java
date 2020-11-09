@@ -58,12 +58,12 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
         // 查找新的SubProcess的parent container
         FlowElementsContainer parentContainer = null;
 
-        if(process.getId().equals(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessParentId())) {
+        if(process.getId().equals(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessParentDefKey())) {
             parentContainer = process;
         } else {
             List<SubProcess> subProcessList = process.findFlowElementsOfType(SubProcess.class, true);
             for(SubProcess aSubProcess : subProcessList) {
-                if(aSubProcess.getId().equals(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessParentId())) {
+                if(aSubProcess.getId().equals(dynamicEmbeddedSubProcessBuilder.getDynamicSubProcessParentDefKey())) {
                     parentContainer = aSubProcess;
                     break;
                 }
