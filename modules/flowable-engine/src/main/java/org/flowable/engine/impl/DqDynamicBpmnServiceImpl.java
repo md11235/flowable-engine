@@ -15,8 +15,11 @@ package org.flowable.engine.impl;
 
 import org.flowable.engine.DqDynamicBpmnService;
 import org.flowable.engine.DynamicBpmnConstants;
+import org.flowable.engine.business.ActionToBuildSubProcess;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.flowable.engine.impl.cmd.DqInjectEmbeddedSubProcessInProcessInstanceCmd;
 import org.flowable.engine.impl.cmd.DqInjectUserTaskInSubProcessInstanceCmd;
+import org.flowable.engine.impl.dynamic.DqDynamicEmbeddedSubProcessBuilder;
 import org.flowable.engine.impl.dynamic.DqDynamicUserTaskBuilder;
 
 /**
@@ -37,6 +40,18 @@ public class DqDynamicBpmnServiceImpl extends DynamicBpmnServiceImpl implements 
                 processInstanceId,
                 subProcessActivityId,
                 dynamicUserTaskBuilder
+        ));
+    }
+
+    @Override
+    public void injectSubProcessInProcessInstance(
+            String processInstanceId,
+            DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder,
+            ActionToBuildSubProcess actionToBuildSubProcess) {
+        commandExecutor.execute(new DqInjectEmbeddedSubProcessInProcessInstanceCmd(
+                processInstanceId,
+                dynamicEmbeddedSubProcessBuilder,
+                actionToBuildSubProcess
         ));
     }
 }

@@ -13,6 +13,8 @@
 
 package org.flowable.engine;
 
+import org.flowable.engine.business.ActionToBuildSubProcess;
+import org.flowable.engine.impl.dynamic.DqDynamicEmbeddedSubProcessBuilder;
 import org.flowable.engine.impl.dynamic.DqDynamicUserTaskBuilder;
 
 /**
@@ -22,4 +24,9 @@ public interface DqDynamicBpmnService extends DynamicBpmnService {
     void injectUserTaskInSubProcessInstance(String processInstanceId,
                                             String subProcessActivityId,
                                             DqDynamicUserTaskBuilder dynamicUserTaskBuilder);
+
+    void injectSubProcessInProcessInstance(
+            String processInstanceId,
+            DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder,
+            ActionToBuildSubProcess actionToBuildSubProcess);
 }
