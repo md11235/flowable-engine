@@ -132,6 +132,12 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
 
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
 
+        this.actionToBuildSubProcessCallback.setAddedActivities(
+                this.addedActivities.stream().map(act -> {
+                    return (Activity)bpmnModel.getFlowElement(act.getId());
+                }).collect(Collectors.toList())
+        );
+
         // 递归处理直接添加在this.parentContainer之下的SubProcess's
         List<SubProcess> subProcessList = this.addedActivities.stream().filter(act -> {
             return (act instanceof SubProcess);

@@ -10,5 +10,7 @@ public interface ActionToBuildSubProcess {
     List<Activity> build(
             FlowElementsContainer parentProcess,
             DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder);
+
+    void setAddedActivities(List<Activity> addedActivities);
 }
 
