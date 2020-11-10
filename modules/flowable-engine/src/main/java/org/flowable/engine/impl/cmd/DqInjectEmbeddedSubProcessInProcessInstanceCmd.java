@@ -118,10 +118,10 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
             nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
             Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
 
-            func1(commandContext,
-                    processInstance,
-                    executionEntityManager,
-                    getNextLevelSubProcess(nextLevelSubProcess));
+//            func1(commandContext,
+//                    processInstance,
+//                    executionEntityManager,
+//                    getNextLevelSubProcess(nextLevelSubProcess));
         });
     }
 
