@@ -135,7 +135,9 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
         // 递归处理直接添加在this.parentContainer之下的SubProcess's
         List<SubProcess> subProcessList = this.addedActivities.stream().filter(act -> {
             return (act instanceof SubProcess);
-        }).map(act -> {return (SubProcess)act;}).collect(Collectors.toList());
+        }).map(act -> {
+            return (SubProcess)bpmnModel.getFlowElement(act.getId());
+        }).collect(Collectors.toList());
         func1(commandContext, processInstance, executionEntityManager, subProcessList);
 //
 //        this.addedActivities.stream().filter(act -> {
@@ -155,7 +157,7 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
         this.addedActivities.stream().filter(act -> {
             return (act instanceof UserTask);
         }).forEach(activity -> {
-            UserTask userTask = (UserTask)activity;
+            UserTask userTask = (UserTask)bpmnModel.getFlowElement(activity.getId());
 
             List<SequenceFlow> userTaskIncomingFlows = userTask.getIncomingFlows();
             if(userTaskIncomingFlows.size() != 1) {
