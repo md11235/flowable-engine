@@ -23,6 +23,7 @@ import org.flowable.engine.impl.dynamic.BaseDynamicSubProcessInjectUtil;
 import org.flowable.engine.impl.dynamic.DqDynamicEmbeddedSubProcessBuilder;
 import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.util.CommandContextUtil;
+import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,19 +116,19 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
             }
 
             nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
+            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
 
             func1(commandContext,
                     processInstance,
                     executionEntityManager,
                     getNextLevelSubProcess(nextLevelSubProcess));
-
-            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
         });
     }
 
     @Override
     protected void updateExecutions(CommandContext commandContext, ProcessDefinitionEntity processDefinitionEntity,
                                     ExecutionEntity processInstance, List<ExecutionEntity> childExecutions) {
+        BpmnModel bpmnModel = ProcessDefinitionUtil.getBpmnModel(processDefinitionEntity.getId());
 
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
 
