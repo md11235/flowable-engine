@@ -26,6 +26,7 @@ import org.flowable.engine.impl.util.CommandContextUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDynamicInjectionCmd implements Command<Void> {
 
@@ -117,10 +118,10 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
 
             Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
 
-            func1(commandContext,
-                    processInstance,
-                    executionEntityManager,
-                    getNextLevelSubProcess(nextLevelSubProcess));
+//            func1(commandContext,
+//                    processInstance,
+//                    executionEntityManager,
+//                    getNextLevelSubProcess(nextLevelSubProcess));
         });
     }
 
@@ -131,17 +132,22 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
 
         // 递归处理直接添加在this.parentContainer之下的SubProcess's
-        this.addedActivities.stream().filter(act -> {
+        List<SubProcess> subProcessList = this.addedActivities.stream().filter(act -> {
             return (act instanceof SubProcess);
-        }).forEach(subProcess -> {
-            List<SubProcess> nextLevelSubProcesses = new ArrayList<>();
-            nextLevelSubProcesses.add((SubProcess)subProcess);
-
-            func1(commandContext,
-                    processInstance,
-                    executionEntityManager,
-                    nextLevelSubProcesses);
-        });
+        }).map(act -> {return (SubProcess)act;}).collect(Collectors.toList());
+        func1(commandContext, processInstance, executionEntityManager, subProcessList);
+//
+//        this.addedActivities.stream().filter(act -> {
+//            return (act instanceof SubProcess);
+//        }).forEach(subProcess -> {
+//            List<SubProcess> nextLevelSubProcesses = new ArrayList<>();
+//            nextLevelSubProcesses.add((SubProcess)subProcess);
+//
+//            func1(commandContext,
+//                    processInstance,
+//                    executionEntityManager,
+//                    nextLevelSubProcesses);
+//        });
 
         // 处理直接添加在this.parentContainer之下的UserTask's
         // 根据跟生成逻辑紧密绑定的流程图定义来获取UserTask的前置的前置，也即是waitingTimer
