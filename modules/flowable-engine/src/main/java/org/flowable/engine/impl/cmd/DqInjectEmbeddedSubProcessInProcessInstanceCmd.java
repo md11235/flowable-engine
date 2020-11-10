@@ -80,7 +80,7 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
                         parentContainer,
                         this.dynamicEmbeddedSubProcessBuilder);
 
-        BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, parentContainer,
+        BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, process,
                 bpmnModel, originalProcessDefinitionEntity, newDeploymentEntity);
     }
 
@@ -116,12 +116,12 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
 
             nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
 
-            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
+            func1(commandContext,
+                    processInstance,
+                    executionEntityManager,
+                    getNextLevelSubProcess(nextLevelSubProcess));
 
-//            func1(commandContext,
-//                    processInstance,
-//                    executionEntityManager,
-//                    getNextLevelSubProcess(nextLevelSubProcess));
+            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
         });
     }
 
