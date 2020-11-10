@@ -129,7 +129,20 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
                                     ExecutionEntity processInstance, List<ExecutionEntity> childExecutions) {
 
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
-        
+
+        // 递归处理直接添加在this.parentContainer之下的SubProcess's
+        this.addedActivities.stream().filter(act -> {
+            return (act instanceof SubProcess);
+        }).forEach(subProcess -> {
+            List<SubProcess> nextLevelSubProcesses = new ArrayList<>();
+            nextLevelSubProcesses.add((SubProcess)subProcess);
+
+            func1(commandContext,
+                    processInstance,
+                    executionEntityManager,
+                    nextLevelSubProcesses);
+        });
+
         // 处理直接添加在this.parentContainer之下的UserTask's
         // 根据跟生成逻辑紧密绑定的流程图定义来获取UserTask的前置的前置，也即是waitingTimer
         this.addedActivities.stream().filter(act -> {
@@ -164,19 +177,6 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
             userTaskExecutionEntity.setCurrentFlowElement(maybeWaitingTimer);
 
             Context.getAgenda().planContinueProcessOperation(userTaskExecutionEntity);
-        });
-
-        // 递归处理直接添加在this.parentContainer之下的SubProcess's
-        this.addedActivities.stream().filter(act -> {
-            return (act instanceof SubProcess);
-        }).forEach(subProcess -> {
-            List<SubProcess> nextLevelSubProcesses = new ArrayList<>();
-            nextLevelSubProcesses.add((SubProcess)subProcess);
-
-            func1(commandContext,
-                    processInstance,
-                    executionEntityManager,
-                    nextLevelSubProcesses);
         });
     }
 
