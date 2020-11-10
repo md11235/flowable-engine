@@ -24,6 +24,7 @@ import org.flowable.engine.impl.dynamic.DqDynamicEmbeddedSubProcessBuilder;
 import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
+import org.flowable.engine.runtime.Execution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,11 +86,12 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
                 bpmnModel, originalProcessDefinitionEntity, newDeploymentEntity);
     }
 
-    private void func1(
+    private List<ExecutionEntity> func1(
             CommandContext commandContext, ExecutionEntity processInstance,
             ExecutionEntityManager executionEntityManager,
             List<SubProcess> nextLevelSubProcesses,
             ExecutionEntity parentExecutionEntityCandidate) {
+        List<ExecutionEntity> result = new ArrayList<>();
         nextLevelSubProcesses.stream().forEach(nextLevelSubProcess -> {
             ExecutionEntity parentExecutionEntity = null;
             if(parentExecutionEntityCandidate != null) {
@@ -123,7 +125,6 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
             }
 
             nextLevelSubProcessChildExecution.setCurrentFlowElement(nextLevelSubProcessStartEvent);
-            Context.getAgenda().planContinueProcessOperation(nextLevelSubProcessChildExecution);
 
             func1(commandContext,
                     processInstance,
@@ -131,7 +132,11 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
                     getNextLevelSubProcess(nextLevelSubProcess),
                     nextLevelSubProcessExecution
                     );
+
+            result.add(nextLevelSubProcessChildExecution);
         });
+
+        return result;
     }
 
     @Override
@@ -153,7 +158,12 @@ public class DqInjectEmbeddedSubProcessInProcessInstanceCmd extends AbstractDyna
         }).map(act -> {
             return (SubProcess)bpmnModel.getFlowElement(act.getId());
         }).collect(Collectors.toList());
-        func1(commandContext, processInstance, executionEntityManager, subProcessList, null);
+        List<ExecutionEntity> startEEs = func1(commandContext, processInstance, executionEntityManager, subProcessList, null);
+
+        startEEs.stream().forEach(
+                ee -> {
+                    Context.getAgenda().planContinueProcessOperation(ee);
+                });
 //
 //        this.addedActivities.stream().filter(act -> {
 //            return (act instanceof SubProcess);
