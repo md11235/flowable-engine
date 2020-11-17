@@ -323,6 +323,14 @@ public abstract class AbstractDynamicStateManager {
         ExecutionEntity processInstanceExecution = executionEntityManager.findById(processInstanceChangeState.getProcessInstanceId());
         processInstanceExecution.setVariables(processInstanceChangeState.getProcessInstanceVariables());
 
+        Collection<String> executionIdsNotToDelete = new HashSet<>();
+        List<MoveExecutionEntityContainer> moveExecutionEntityContainers = processInstanceChangeState.getMoveExecutionEntityContainers();
+        moveExecutionEntityContainers.stream().forEach(container -> {
+            container.getExecutions().stream().forEach(execution -> {
+                executionIdsNotToDelete.add(execution.getId());
+            });
+        });
+
         for (MoveExecutionEntityContainer moveExecutionContainer : processInstanceChangeState.getMoveExecutionEntityContainers()) {
             prepareMoveExecutionEntityContainer(moveExecutionContainer, processInstanceChangeState.getProcessDefinitionToMigrateTo().map(ProcessDefinition::getId), commandContext);
             // Action the moves (changeState)
@@ -347,7 +355,6 @@ public abstract class AbstractDynamicStateManager {
             }
 
             String flowElementIdsLine = printFlowElementIds(moveToFlowElements);
-            Collection<String> executionIdsNotToDelete = new HashSet<>();
             for (ExecutionEntity execution : executionsToMove) {
                 executionIdsNotToDelete.add(execution.getId());
 
@@ -564,7 +571,7 @@ public abstract class AbstractDynamicStateManager {
         ExecutionEntity defaultContinueParentExecution = moveExecutionEntityContainer.getContinueParentExecution(movingExecutions.get(0).getId());
         Set<String> movingExecutionIds = movingExecutions.stream().map(ExecutionEntity::getId).collect(Collectors.toSet());
 
-        //Build the subProcess hierarchy
+        //Build the subProcess ExecutionEntity hierarchy
         for (SubProcess subProcess : subProcessesToCreate.values()) {
             if (!processInstanceChangeState.getCreatedEmbeddedSubProcesses().containsKey(subProcess.getId())) {
                 ExecutionEntity embeddedSubProcess = createEmbeddedSubProcessHierarchy(subProcess, defaultContinueParentExecution, subProcessesToCreate, movingExecutionIds, processInstanceChangeState, commandContext);
