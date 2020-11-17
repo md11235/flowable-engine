@@ -12,6 +12,8 @@
  */
 package org.flowable.engine.impl.dynamic;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,26 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.flowable.bpmn.model.Activity;
-import org.flowable.bpmn.model.BoundaryEvent;
-import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.bpmn.model.CallActivity;
-import org.flowable.bpmn.model.CompensateEventDefinition;
-import org.flowable.bpmn.model.EventDefinition;
-import org.flowable.bpmn.model.EventSubProcess;
-import org.flowable.bpmn.model.FlowElement;
-import org.flowable.bpmn.model.FlowElementsContainer;
-import org.flowable.bpmn.model.Gateway;
-import org.flowable.bpmn.model.IOParameter;
-import org.flowable.bpmn.model.MessageEventDefinition;
+import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
-import org.flowable.bpmn.model.Signal;
-import org.flowable.bpmn.model.SignalEventDefinition;
-import org.flowable.bpmn.model.StartEvent;
-import org.flowable.bpmn.model.SubProcess;
-import org.flowable.bpmn.model.TimerEventDefinition;
-import org.flowable.bpmn.model.UserTask;
-import org.flowable.bpmn.model.ValuedDataObject;
 import org.flowable.common.engine.api.FlowableException;
 import org.flowable.common.engine.api.delegate.Expression;
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEventType;
@@ -83,7 +67,9 @@ import org.flowable.engine.impl.util.TimerUtil;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.job.service.TimerJobService;
 import org.flowable.job.service.impl.persistence.entity.TimerJobEntity;
+import org.flowable.task.api.Task;
 import org.flowable.task.service.TaskService;
+import org.flowable.task.service.impl.persistence.entity.TaskEntity;
 import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -379,6 +365,23 @@ public abstract class AbstractDynamicStateManager {
             }
 
             List<ExecutionEntity> newChildExecutions = createEmbeddedSubProcessAndExecutions(moveToFlowElements, executionsToMove, moveExecutionContainer, processInstanceChangeState, commandContext);
+            TaskService taskService = CommandContextUtil.getTaskService(commandContext);
+            newChildExecutions.stream().forEach(execution -> {
+                FlowElement _flowElement = execution.getCurrentFlowElement();
+
+                if(_flowElement instanceof UserTask) {
+                    UserTask userTask = ((UserTask) _flowElement);
+                    Task task2 = taskService.createTaskQuery().taskDefinitionKey(userTask.getId()).singleResult();
+                    TaskEntity task = (TaskEntity)task2;
+
+                    try {
+                        task.setDueDate((new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")).parse(userTask.getDueDate()));
+                        taskService.updateTask(task, true);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
             if (moveExecutionContainer.isMoveToSubProcessInstance()) {
                 CallActivity callActivity = moveExecutionContainer.getCallActivity();
