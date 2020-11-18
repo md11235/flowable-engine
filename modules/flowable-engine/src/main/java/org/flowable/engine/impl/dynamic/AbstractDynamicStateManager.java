@@ -12,25 +12,9 @@
  */
 package org.flowable.engine.impl.dynamic;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.apache.commons.lang3.StringUtils;
-import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
+import org.flowable.bpmn.model.*;
 import org.flowable.common.engine.api.FlowableException;
 import org.flowable.common.engine.api.delegate.Expression;
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEventType;
@@ -47,23 +31,11 @@ import org.flowable.engine.impl.dynamic.MoveExecutionEntityContainer.FlowElement
 import org.flowable.engine.impl.jobexecutor.TimerEventHandler;
 import org.flowable.engine.impl.jobexecutor.TriggerTimerEventJobHandler;
 import org.flowable.engine.impl.persistence.deploy.DeploymentManager;
-import org.flowable.engine.impl.persistence.entity.EventSubscriptionEntity;
-import org.flowable.engine.impl.persistence.entity.EventSubscriptionEntityManager;
-import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
-import org.flowable.engine.impl.persistence.entity.ExecutionEntityImpl;
-import org.flowable.engine.impl.persistence.entity.ExecutionEntityManager;
-import org.flowable.engine.impl.persistence.entity.MessageEventSubscriptionEntity;
-import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntityManager;
-import org.flowable.engine.impl.persistence.entity.SignalEventSubscriptionEntity;
+import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.runtime.ChangeActivityStateBuilderImpl;
 import org.flowable.engine.impl.runtime.MoveActivityIdContainer;
 import org.flowable.engine.impl.runtime.MoveExecutionIdContainer;
-import org.flowable.engine.impl.util.CommandContextUtil;
-import org.flowable.engine.impl.util.Flowable5Util;
-import org.flowable.engine.impl.util.ProcessDefinitionUtil;
-import org.flowable.engine.impl.util.ProcessInstanceHelper;
-import org.flowable.engine.impl.util.TaskHelper;
-import org.flowable.engine.impl.util.TimerUtil;
+import org.flowable.engine.impl.util.*;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.job.service.TimerJobService;
 import org.flowable.job.service.impl.persistence.entity.TimerJobEntity;
@@ -73,6 +45,12 @@ import org.flowable.task.service.impl.persistence.entity.TaskEntity;
 import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Tijs Rademakers
@@ -366,6 +344,7 @@ public abstract class AbstractDynamicStateManager {
 
             List<ExecutionEntity> newChildExecutions = createEmbeddedSubProcessAndExecutions(moveToFlowElements, executionsToMove, moveExecutionContainer, processInstanceChangeState, commandContext);
             TaskService taskService = CommandContextUtil.getTaskService(commandContext);
+
             newChildExecutions.stream().forEach(execution -> {
                 FlowElement _flowElement = execution.getCurrentFlowElement();
 
@@ -375,8 +354,11 @@ public abstract class AbstractDynamicStateManager {
                     TaskEntity task = (TaskEntity)task2;
 
                     try {
-                        task.setDueDate((new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")).parse(userTask.getDueDate()));
-                        taskService.updateTask(task, true);
+                        Date newDueDate = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")).parse(userTask.getDueDate());
+                        if(newDueDate.getTime() != task.getDueDate().getTime()) {
+                            task.setDueDate(newDueDate);
+                            taskService.updateTask(task, true);
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
