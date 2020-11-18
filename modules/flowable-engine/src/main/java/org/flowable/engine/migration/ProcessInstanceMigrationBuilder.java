@@ -13,9 +13,11 @@
 
 package org.flowable.engine.migration;
 
+import java.util.List;
 import java.util.Map;
 
 import org.flowable.engine.impl.migration.ProcessInstanceMigrationValidationResult;
+import org.flowable.engine.runtime.ProcessInstance;
 
 /**
  * @author Dennis Federico
@@ -77,6 +79,7 @@ public interface ProcessInstanceMigrationBuilder {
      * @see ActivityMigrationMapping
      */
     ProcessInstanceMigrationBuilder addActivityMigrationMapping(ActivityMigrationMapping mapping);
+    ProcessInstanceMigrationBuilder addActivityMigrationMappings(List<ActivityMigrationMapping> mappings);
 
     /**
      * Specifies a process instance variable that will also be available during the process migration (ie. to resolve callActivity calledElement expressions of the new process definition - if any)

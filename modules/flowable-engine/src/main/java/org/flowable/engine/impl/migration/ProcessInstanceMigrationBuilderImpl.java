@@ -13,6 +13,7 @@
 
 package org.flowable.engine.impl.migration;
 
+import java.util.List;
 import java.util.Map;
 
 import org.flowable.common.engine.api.FlowableException;
@@ -70,6 +71,12 @@ public class ProcessInstanceMigrationBuilderImpl implements ProcessInstanceMigra
     @Override
     public ProcessInstanceMigrationBuilder addActivityMigrationMapping(ActivityMigrationMapping mapping) {
         this.migrationDocumentBuilder.addActivityMigrationMapping(mapping);
+        return this;
+    }
+
+    @Override
+    public ProcessInstanceMigrationBuilder addActivityMigrationMappings(List<ActivityMigrationMapping> mappings) {
+        this.migrationDocumentBuilder.addActivityMigrationMappings(mappings);
         return this;
     }
 
