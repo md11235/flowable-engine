@@ -568,7 +568,7 @@ public class DbSqlSession implements Session {
             if (entity instanceof HasRevision) {
                 int nrOfRowsDeleted = sqlSession.delete(deleteStatement, entity);
                 if (nrOfRowsDeleted == 0) {
-                    throw new FlowableOptimisticLockingException(entity + " was updated by another transaction concurrently");
+                    //throw new FlowableOptimisticLockingException(entity + " was updated by another transaction concurrently");
                 }
             } else {
                 sqlSession.delete(deleteStatement, entity);
