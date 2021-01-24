@@ -37,6 +37,7 @@ import org.flowable.engine.impl.runtime.MoveActivityIdContainer;
 import org.flowable.engine.impl.runtime.MoveExecutionIdContainer;
 import org.flowable.engine.impl.util.*;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.engine.runtime.Execution;
 import org.flowable.job.service.TimerJobService;
 import org.flowable.job.service.impl.persistence.entity.TimerJobEntity;
 import org.flowable.task.api.Task;
@@ -345,6 +346,7 @@ public abstract class AbstractDynamicStateManager {
             List<ExecutionEntity> newChildExecutions = createEmbeddedSubProcessAndExecutions(moveToFlowElements, executionsToMove, moveExecutionContainer, processInstanceChangeState, commandContext);
             TaskService taskService = CommandContextUtil.getTaskService(commandContext);
 
+            // MD11235: Set newly specified due date for all user tasks.
             newChildExecutions.stream().forEach(execution -> {
                 FlowElement _flowElement = execution.getCurrentFlowElement();
 
@@ -586,6 +588,30 @@ public abstract class AbstractDynamicStateManager {
                     newChildExecution = executionEntityManager.createChildExecution(parentExecution);
                     newChildExecution.setCurrentFlowElement(newFlowElement);
                 }
+
+//                if(parentExecution.getCurrentFlowElement() instanceof SubProcess) {
+//                    SubProcess subProcess = (SubProcess)parentExecution.getCurrentFlowElement();
+//                    List<UserTask> userTasks = subProcess.findAllSubFlowElementInFlowMapOfType(UserTask.class);
+//                    for(UserTask ut : userTasks) {
+//                        boolean doesUtHasExecution = false;
+//                        if(ut.getParentContainer().equals(subProcess)) {
+//                            for(ExecutionEntity execution : parentExecution.getExecutions()) {
+//                                if(execution.getCurrentFlowElement().equals(ut)) {
+//                                    doesUtHasExecution = true;
+//                                    break;
+//                                }
+//                            }
+//                        } else {
+//                            doesUtHasExecution = true;
+//                        }
+//                        if(!doesUtHasExecution) {
+//                            ExecutionEntity aNewChildExecution = executionEntityManager.createChildExecution(parentExecution);
+//                            aNewChildExecution.setCurrentFlowElement(ut);
+//
+//                            CommandContextUtil.getAgenda().planContinueProcessOperation(aNewChildExecution);
+//                                                    }
+//                    }
+//                }
 
                 if (newChildExecution != null) {
                     if (moveExecutionEntityContainer.getNewAssigneeId().isPresent() && newFlowElement instanceof UserTask) {

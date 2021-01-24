@@ -1,6 +1,8 @@
 package org.flowable.engine.impl.dynamic;
 
 import org.flowable.bpmn.model.CustomProperty;
+import org.flowable.bpmn.model.HttpServiceTask;
+import org.flowable.bpmn.model.UserTask;
 
 import java.util.List;
 
@@ -15,6 +17,24 @@ public class DqDynamicUserTaskBuilder extends DynamicUserTaskBuilder{
     private String constructionCandidateGroupsStr;
     private String parentFQNameUUID;
     private String parentFQName;
+    private UserTask userTask;
+    private HttpServiceTask measurementNotificationTask;
+
+    public UserTask getUserTask() {
+        return userTask;
+    }
+
+    public void setUserTask(UserTask userTask) {
+        this.userTask = userTask;
+    }
+
+    public HttpServiceTask getMeasurementNotificationTask() {
+        return measurementNotificationTask;
+    }
+
+    public void setMeasurementNotificationTask(HttpServiceTask measurementNotificationTask) {
+        this.measurementNotificationTask = measurementNotificationTask;
+    }
 
     public List<CustomProperty> getTaskCustomProperties() {
         return customProperties;

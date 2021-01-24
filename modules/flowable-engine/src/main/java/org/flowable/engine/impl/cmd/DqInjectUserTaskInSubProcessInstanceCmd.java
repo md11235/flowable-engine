@@ -20,19 +20,15 @@ import org.flowable.common.engine.impl.interceptor.CommandContext;
 import org.flowable.engine.impl.context.Context;
 import org.flowable.engine.impl.dynamic.BaseDynamicSubProcessInjectUtil;
 import org.flowable.engine.impl.dynamic.DqDynamicUserTaskBuilder;
-import org.flowable.engine.impl.dynamic.DynamicUserTaskBuilder;
 import org.flowable.engine.impl.persistence.entity.*;
 import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /*
  author: sen.zhang@gmail.com
@@ -95,7 +91,9 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
 
     public String buildActivitiesForUserTask(
             FlowElementsContainer parentProcess, String parentProcessUUIDBasedOnFQProcessName,
-            String parentProcessName, ParallelGateway innerStartEventParallelGateway, ParallelGateway innerEndEventParallelGateway) {
+            String parentProcessName,
+            ParallelGateway innerStartEventParallelGateway,
+            ParallelGateway innerEndEventParallelGateway) {
         String taskId = dynamicUserTaskBuilder.getId();
         String taskName = dynamicUserTaskBuilder.getName();
         String taskStartDateStr = dynamicUserTaskBuilder.getStartDateStr();
@@ -108,103 +106,67 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         // dynamicUserTaskBuilder.getParentProcessUUID();
 
         // in order to notify that this task has started.
-        IntermediateCatchEvent userTaskWaitingTimer = new IntermediateCatchEvent();
-        userTaskWaitingTimer.setId("ID-waitingTimer-" + taskId + parentProcessUUIDBasedOnFQProcessName);
-
-        TimerEventDefinition startEventTED = new TimerEventDefinition();
-
-        startEventTED.setTimeDate(taskStartDateStr);
-
-        userTaskWaitingTimer.addEventDefinition(startEventTED);
-        parentProcess.addFlowElement(userTaskWaitingTimer);
-
-        String notificationContent = "{\"role\": \"" + constructionCandidateGroupsStr +"\", \"title\": \"请开始"+ taskName +"的施工\", \"message\": \"谢谢配合\"}";
-        HttpServiceTask sendConstructionNotificationTask = buildReminderTask(
-                parentProcessUUIDBasedOnFQProcessName, taskId,
-                parentProcessName, taskName,
-                notificationContent,"开始施工提醒", _wechatNotificationServiceUrl);
-        parentProcess.addFlowElement(sendConstructionNotificationTask);
-
-        SequenceFlow flow1 = new SequenceFlow(innerStartEventParallelGateway.getId(), userTaskWaitingTimer.getId());
-        parentProcess.addFlowElement(flow1);
-
-        // 执行任务的时间到了之后，并行出去：第一条走用户任务，另一条发送通知
-        ParallelGateway waitingTimerOutgoingPGW = new ParallelGateway();
-        waitingTimerOutgoingPGW.setId("ID-waitingTimerOutgoingPGW-" + taskId + parentProcessUUIDBasedOnFQProcessName);
-        parentProcess.addFlowElement(waitingTimerOutgoingPGW);
-        SequenceFlow flow6 = new SequenceFlow(userTaskWaitingTimer.getId(), waitingTimerOutgoingPGW.getId());
-        parentProcess.addFlowElement(flow6);
-
-        SequenceFlow flow5 = new SequenceFlow(waitingTimerOutgoingPGW.getId(), sendConstructionNotificationTask.getId());
-        parentProcess.addFlowElement(flow5);
-
-        EndEvent constructionNotificationEndEvent = new EndEvent();
-        constructionNotificationEndEvent.setId("ID-constructionNotificationEndEvent-" + taskId + parentProcessUUIDBasedOnFQProcessName);
-        parentProcess.addFlowElement(constructionNotificationEndEvent);
-
-        SequenceFlow flow2 = new SequenceFlow(sendConstructionNotificationTask.getId(), constructionNotificationEndEvent.getId());
-        parentProcess.addFlowElement(flow2);
+//        IntermediateCatchEvent userTaskWaitingTimer = new IntermediateCatchEvent();
+//        userTaskWaitingTimer.setId("ID-waitingTimer-" + taskId + parentProcessUUIDBasedOnFQProcessName);
+//
+//        TimerEventDefinition startEventTED = new TimerEventDefinition();
+//
+//        startEventTED.setTimeDate(taskStartDateStr);
+//
+//        userTaskWaitingTimer.addEventDefinition(startEventTED);
+//        parentProcess.addFlowElement(userTaskWaitingTimer);
+//
+//        String notificationContent = "{\"role\": \"" + constructionCandidateGroupsStr +"\", \"title\": \"请开始"+ taskName +"的施工\", \"message\": \"谢谢配合\"}";
+//        HttpServiceTask sendConstructionNotificationTask = buildReminderTask(
+//                parentProcessUUIDBasedOnFQProcessName, taskId,
+//                parentProcessName, taskName,
+//                notificationContent,"开始施工提醒", _wechatNotificationServiceUrl);
+//        parentProcess.addFlowElement(sendConstructionNotificationTask);
+//
+//        SequenceFlow flow1 = new SequenceFlow(innerStartEventParallelGateway.getId(), userTaskWaitingTimer.getId());
+//        parentProcess.addFlowElement(flow1);
+//
+//        // 执行任务的时间到了之后，并行出去：第一条走用户任务，另一条发送通知
+//        ParallelGateway waitingTimerOutgoingPGW = new ParallelGateway();
+//        waitingTimerOutgoingPGW.setId("ID-waitingTimerOutgoingPGW-" + taskId + parentProcessUUIDBasedOnFQProcessName);
+//        parentProcess.addFlowElement(waitingTimerOutgoingPGW);
+//        SequenceFlow flow6 = new SequenceFlow(userTaskWaitingTimer.getId(), waitingTimerOutgoingPGW.getId());
+//        parentProcess.addFlowElement(flow6);
+//
+//        SequenceFlow flow5 = new SequenceFlow(waitingTimerOutgoingPGW.getId(), sendConstructionNotificationTask.getId());
+//        parentProcess.addFlowElement(flow5);
+//
+//        EndEvent constructionNotificationEndEvent = new EndEvent();
+//        constructionNotificationEndEvent.setId("ID-constructionNotificationEndEvent-" + taskId + parentProcessUUIDBasedOnFQProcessName);
+//        parentProcess.addFlowElement(constructionNotificationEndEvent);
+//
+//        SequenceFlow flow2 = new SequenceFlow(sendConstructionNotificationTask.getId(), constructionNotificationEndEvent.getId());
+//        parentProcess.addFlowElement(flow2);
 
         // TODO: 每一个新的UserTask，根据其id去查询tb_flw_task_extra_info的task_def_key
         //  如果匹配，则更新信息；如果没有则插入新的纪录。
-        UserTask userTask = new UserTask();
-        userTask.setId("ID-userTask-" + taskId + parentProcessUUIDBasedOnFQProcessName);
-        userTask.setName(((SubProcess)parentProcess).getName() + "."+ taskName);
-
-        userTask.setDueDate(taskDueDateStr);
-        userTask.setCandidateGroups(userRoles);
-
-        userTask.setCustomProperties(customProperties);
+        UserTask userTask = dynamicUserTaskBuilder.getUserTask();
 
         parentProcess.addFlowElement(userTask);
 
 
-        SequenceFlow flow7 = new SequenceFlow(waitingTimerOutgoingPGW.getId(), userTask.getId());
+        SequenceFlow flow7 = new SequenceFlow(innerStartEventParallelGateway.getId(), userTask.getId());
         parentProcess.addFlowElement(flow7);
 
-        if(taskMeasurementTimeSpan >= 0) {
-            HttpServiceTask sendMeasurementNotificationTask = new HttpServiceTask();
-            sendMeasurementNotificationTask.setId("ID-measurementNotificationTask-" + taskId + parentProcessUUIDBasedOnFQProcessName);
-            sendMeasurementNotificationTask.setName(taskName + "." + "实测实量提醒");
-            sendMeasurementNotificationTask.setType("http");
-            List<FieldExtension> extensions = new ArrayList<>();
-
-            FieldExtension httpRequestMethod = new FieldExtension();
-            httpRequestMethod.setFieldName("requestMethod");
-            httpRequestMethod.setStringValue("POST");
-            extensions.add(httpRequestMethod);
-
-            FieldExtension httpRequestUrl = new FieldExtension();
-            httpRequestUrl.setFieldName("requestUrl");
-            httpRequestUrl.setStringValue(_wechatNotificationServiceUrl);
-            extensions.add(httpRequestUrl);
-
-            FieldExtension httpRequestHeaders = new FieldExtension();
-            httpRequestHeaders.setFieldName("requestHeaders");
-            // TODO: change into flowable:expression
-            httpRequestHeaders.setStringValue("Content-Type: application/json");
-            extensions.add(httpRequestHeaders);
-
-            FieldExtension httpRequestBody = new FieldExtension();
-            httpRequestBody.setFieldName("requestBody");
-            httpRequestBody.setStringValue("{\"role\": \"measurement_worker\", \"days_allocated\": "+taskMeasurementTimeSpan+", \"title\": \"请于"+ taskMeasurementTimeSpan +"天内完成" + taskName + "的实测实量\", \"message\": \"谢谢配合\"}");
-            extensions.add(httpRequestBody);
-
-//                FieldExtension httpResultVariablePrefix = new FieldExtension();
-//                httpResultVariablePrefix.setFieldName();
-//                //  resultVariablePrefix
-
-            sendMeasurementNotificationTask.setFieldExtensions(extensions);
-            parentProcess.addFlowElement(sendMeasurementNotificationTask);
+        if(dynamicUserTaskBuilder.getMeasurementNotificationTask() != null) {
+            HttpServiceTask sendMeasurementNotificationTask = dynamicUserTaskBuilder.getMeasurementNotificationTask();
 
             SequenceFlow flow3 = new SequenceFlow(userTask.getId(), sendMeasurementNotificationTask.getId());
             parentProcess.addFlowElement(flow3);
 
             SequenceFlow flow4 = new SequenceFlow(sendMeasurementNotificationTask.getId(), innerEndEventParallelGateway.getId());
             parentProcess.addFlowElement(flow4);
+        } else {
+            SequenceFlow flow8 = new SequenceFlow(userTask.getId(), innerEndEventParallelGateway.getId());
+            parentProcess.addFlowElement(flow8);
         }
 
-        String firstActivityId = userTaskWaitingTimer.getId();
+        String firstActivityId = userTask.getId();
 
         return firstActivityId;
     }
@@ -330,7 +292,7 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
         //      如果找到 那么 调用 func2 相继插入 activity_name == "A.B.C.D.E.F" 和 activity_name == "A.B.C.D.E.F.G"
         //       调用 func1 插入 userTask
         //
-        addUserTaskToSubProcess(process);
+        // addUserTaskToSubProcess(process);
 
         BaseDynamicSubProcessInjectUtil.processFlowElements(commandContext, process, bpmnModel, originalProcessDefinitionEntity, newDeploymentEntity);
     }
@@ -348,7 +310,8 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
 
         ExecutionEntity execution = executionEntityManager.createChildExecution(subProcessExecutionEntity);
         
-        FlowElement nextExecutionTarget = bpmnModel.getProcessById(processDefinitionEntity.getKey()).getFlowElement(this.firstActivityId, true);
+        FlowElement nextExecutionTarget = bpmnModel.getProcessById(processDefinitionEntity.getKey()).getFlowElement(
+                this.dynamicUserTaskBuilder.getUserTask().getId(), true);
         execution.setCurrentFlowElement(nextExecutionTarget);
 
         Context.getAgenda().planContinueProcessOperation(execution);
