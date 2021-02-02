@@ -352,7 +352,9 @@ public abstract class AbstractDynamicStateManager {
 
                 if(_flowElement instanceof UserTask) {
                     UserTask userTask = ((UserTask) _flowElement);
-                    Task task2 = taskService.createTaskQuery().taskDefinitionKey(userTask.getId()).singleResult();
+                    Task task2 = taskService.createTaskQuery()
+                            .processInstanceId(execution.getProcessInstance().getId())
+                            .taskDefinitionKey(userTask.getId()).singleResult();
                     TaskEntity task = (TaskEntity)task2;
 
                     try {
