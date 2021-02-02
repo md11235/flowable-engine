@@ -27,6 +27,5 @@ public interface DqDynamicBpmnService extends DynamicBpmnService {
 
     void injectSubProcessInProcessInstance(
             String processInstanceId,
-            DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder,
-            ActionToBuildSubProcess actionToBuildSubProcess);
+            DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder);
 }

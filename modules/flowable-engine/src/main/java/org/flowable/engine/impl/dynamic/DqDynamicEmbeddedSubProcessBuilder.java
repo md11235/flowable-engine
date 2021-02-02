@@ -15,16 +15,18 @@ package org.flowable.engine.impl.dynamic;
 public class DqDynamicEmbeddedSubProcessBuilder extends DynamicEmbeddedSubProcessBuilder {
 
     // parent container def key
-    protected String parentDefKeyOfNewDynamicActivity;
-//    protected String dynamicSubProcessFQName;
+    protected String parentSubProcessDefKey;
+    protected String dynamicChildSubProcessDefKey;
 //    protected String dynamicSubProcessOnlyUUID;
 //    protected String startDateStr;
 //    protected String baseCompletionDateStr;
 //    protected String managementLevelStr;
 //    protected String dynamicSubProcessDefKey;
 
-    public DqDynamicEmbeddedSubProcessBuilder() {
-
+    public DqDynamicEmbeddedSubProcessBuilder(String parentSubProcessDefKey,
+                                              String dynamicChildSubProcessDefKey) {
+        this.parentSubProcessDefKey = parentSubProcessDefKey;
+        this.dynamicChildSubProcessDefKey = dynamicChildSubProcessDefKey;
     }
 
 //    public String getDynamicSubProcessFQName() {
@@ -67,20 +69,33 @@ public class DqDynamicEmbeddedSubProcessBuilder extends DynamicEmbeddedSubProces
 //        this.baseCompletionDateStr = baseCompletionDateStr;
 //    }
 
-    public String getParentDefKeyOfNewDynamicActivity() {
-        return parentDefKeyOfNewDynamicActivity;
+    public String getParentSubProcessDefKey() {
+        return parentSubProcessDefKey;
     }
 
-    public void setParentDefKeyOfNewDynamicActivity(String parentDefKeyOfNewDynamicActivity) {
-        this.parentDefKeyOfNewDynamicActivity = parentDefKeyOfNewDynamicActivity;
+    public void setParentSubProcessDefKey(String parentSubProcessDefKey) {
+        this.parentSubProcessDefKey = parentSubProcessDefKey;
     }
 
     public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessParentId(String parentDefKey) {
-        this.parentDefKeyOfNewDynamicActivity = parentDefKey;
+        this.parentSubProcessDefKey = parentDefKey;
         return this;
     }
 
-//    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessFQName(String name) {
+    public String getDynamicChildSubProcessDefKey() {
+        return dynamicChildSubProcessDefKey;
+    }
+
+    public void setDynamicChildSubProcessDefKey(String dynamicChildSubProcessDefKey) {
+        this.dynamicChildSubProcessDefKey = dynamicChildSubProcessDefKey;
+    }
+
+    public DqDynamicEmbeddedSubProcessBuilder dynamicChildSubProcessDefKey(String dynamicChildSubProcessDefKey) {
+        this.dynamicChildSubProcessDefKey = dynamicChildSubProcessDefKey;
+        return this;
+    }
+
+    //    public DqDynamicEmbeddedSubProcessBuilder dynamicSubProcessFQName(String name) {
 //        this.dynamicSubProcessFQName = name;
 //        return this;
 //    }

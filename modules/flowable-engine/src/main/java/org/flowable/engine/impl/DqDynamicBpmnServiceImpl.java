@@ -46,12 +46,9 @@ public class DqDynamicBpmnServiceImpl extends DynamicBpmnServiceImpl implements 
     @Override
     public void injectSubProcessInProcessInstance(
             String processInstanceId,
-            DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder,
-            ActionToBuildSubProcess actionToBuildSubProcess) {
+            DqDynamicEmbeddedSubProcessBuilder dynamicEmbeddedSubProcessBuilder) {
         commandExecutor.execute(new DqInjectEmbeddedSubProcessInProcessInstanceCmd(
                 processInstanceId,
-                dynamicEmbeddedSubProcessBuilder,
-                actionToBuildSubProcess
-        ));
+                dynamicEmbeddedSubProcessBuilder));
     }
 }

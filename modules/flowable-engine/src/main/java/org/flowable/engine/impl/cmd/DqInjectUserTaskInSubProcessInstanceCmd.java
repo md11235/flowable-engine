@@ -304,7 +304,10 @@ public class DqInjectUserTaskInSubProcessInstanceCmd extends AbstractDynamicInje
 
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager(commandContext);
 
-        List<ActivityInstanceEntity> subProcessActivityIE = CommandContextUtil.getActivityInstanceEntityManager(commandContext).findActivityInstancesByActivityId(this.subProcessActivityId);
+        List<ActivityInstanceEntity> maybeSubProcessActivityIE = CommandContextUtil.getActivityInstanceEntityManager(commandContext).findActivityInstancesByActivityId(this.subProcessActivityId);
+
+        List<ActivityInstanceEntity> subProcessActivityIE = maybeSubProcessActivityIE.stream()
+                .filter(ie -> ie.getDeleteReason()==null).collect(Collectors.toList());
 
         ExecutionEntity subProcessExecutionEntity = executionEntityManager.findById(subProcessActivityIE.get(0).getExecutionId());
 
